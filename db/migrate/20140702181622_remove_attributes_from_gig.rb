@@ -2,7 +2,12 @@ class RemoveAttributesFromGig < ActiveRecord::Migration
   def change
   	remove_column :gigs, :rating_per_order
   	remove_column :gigs, :amount_per_gig
-  	change_column :gigs, :express_boolean, :boolean, default: 0
+  	if ActiveRecord::Base.connection.instance_values["config"][:adapter] == "mysql"
+  		change_column :gigs, :express_boolean, :boolean, default: 0
+  	else
+  		change_column :gigs, :express_boolean, 'boolean USING CAST(express_boolean AS boolean)', default: 0
+  	end
+  	
 
   	remove_attachment :videos, :video
   end
