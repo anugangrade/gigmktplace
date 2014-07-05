@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140704185837) do
+ActiveRecord::Schema.define(version: 20140705194601) do
 
   create_table "attachments", force: true do |t|
     t.integer  "message_id"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20140704185837) do
 
   create_table "gigs", force: true do |t|
     t.text     "title"
-    t.string   "category_id"
+    t.integer  "category_id"
     t.integer  "user_id"
     t.text     "description"
     t.text     "instructions_for_buyer"

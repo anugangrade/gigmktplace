@@ -6,10 +6,10 @@ class HomeController < ApplicationController
         @gigs = []
         @category_ids = Category.where(title: params[:search_by]).collect(&:id)
         @category_ids.each do |category_id| 
-          @gigs += Gig.where(:category_id=>category_id.to_i) if !Gig.where(:category_id=>category_id.to_i).blank?
+          @gigs += Gig.where(:category_id=>category_id) if !Gig.where(:category_id=>category_id).blank?
         end
       else
-  		  @gigs=Gig.where(:category_id=>params[:search_by].to_i)
+  		  @gigs=Gig.where(:category_id=>params[:search_by])
       end
   	else
   		@gigs = Gig.all
