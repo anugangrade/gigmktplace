@@ -57,3 +57,6 @@ gem 'kaminari'
 gem 'masonry-rails'
 
 gem 'activemerchant'
+
+
+# gem "rails12_factor" , group: :production
