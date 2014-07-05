@@ -1,0 +1,36 @@
+<h1>Inbox</h1>
+
+<table class="table table-hover"> 
+  <thead>
+    <tr>
+      <th>Sender</th>
+      <th>Last Message</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @conversations.each do |conversation| %>
+      <% receiver = conversation.user_id == current_user.id ? User.find(conversation.sender_id) : User.find(conversation.user_id) %>
+      <% message = conversation.messages.last %>
+      <tr data-link="<%= conversation_path(receiver) %>">
+        <td><%= image_tag receiver.avatar.url(:thumb), :class=>"inbox_user_image" %><%= receiver.name %></td>
+        <td><%= message.content %></td>
+        <td><%= message.updated_at.strftime('%b %d, %y') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<script>
+  jQuery(function($) {
+    $("tr[data-link]").click(function() {
+      window.location = this.dataset.link
+    });
+  })
+</script>
+
+<style>
+tbody tr{
+  cursor: pointer;
+}
+</style>

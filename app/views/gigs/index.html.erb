@@ -1,0 +1,44 @@
+<h1>Listing gigs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Category</th>
+      <th>Subcategory</th>
+      <th>User</th>
+      <th>Description</th>
+      <th>Instructions for buyer</th>
+      <th>Tags</th>
+      <th>Express boolean</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gigs.each do |gig| %>
+      <tr>
+        <td><%= gig.title %></td>
+        <td><%= Category.find(gig.category_id).title %></td>
+        <td><%= Category.find(gig.category_id).subtitle %></td>
+        <td><%= User.find(gig.user_id).name %></td>
+        <td><%= gig.description %></td>
+        <td><%= gig.instructions_for_buyer %></td>
+        <td><% gig.tags.any? %>
+          <% gig.tags.each do |tag| %>
+          <%= link_to tag.name, tagged_url(:tag => tag.name) %>
+          <% end %>
+        </td>
+        <td><%= gig.express_boolean %></td>
+        <td><%= link_to 'Show', gig %></td>
+        <td><%= link_to 'Edit', edit_gig_path(gig) %></td>
+        <td><%= link_to 'Destroy', gig, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Gig', new_gig_path %>
+<%= link_to "Create Extragig", extragigs_path%>

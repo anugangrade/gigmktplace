@@ -1,0 +1,54 @@
+<h1 align="center">Welcome to Gig_mktplace</h1>
+<h1 align="center">The world's largest marketplace for services, starting at $5</h1>
+
+<div class="container">
+  <% count = 0%>
+  <div class="row">
+    <% if !@videos.blank? %>
+      <% @videos.each do |video| %>
+        <% gig = video.gig %>
+        <% user = video.gig.user %>
+        <%if count%4==0%>
+          </div><div class="row">
+        <% end %>
+        <div class="col-md-3" style="padding:5px;"> 
+          <div style="border: 3px solid #E7E7E7;padding:4px;">
+            <div class="videoWrapper">
+              <% youtube_id = video.video_url.split("=")[1] %>
+              <iframe title="YouTube video player" width="225" height="225" src="http://www.youtube.com/embed/<%= youtube_id %>?controls=2" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <h4><%= link_to gig.title ,gig_path(gig), :class=>"go_green"%></h4>
+            <hr>
+            <div class="row">
+              <a href="<%= profile_path(user) %>">
+                <div class="col-md-2"><%= image_tag user.avatar.url(:tiny) %></div>
+                <div class="col-md-6"><%= user.name %> <br/> <%= user.location %></div>
+              </a>
+              <div class="col-md-4"><div class="star_<%= user.id %>" style="float:right"></div></div>
+            </div>
+             
+            
+          </div>
+        </div>
+        <% count = count+1%>
+        <script type="text/javascript">
+          $(document).ready(function(){
+            var user_id = "<%= user.id %>"
+            raty_js()
+            $('.star_'+user_id).raty({
+              readOnly: true,
+              score: <%= user.average_rating %>,
+              path: '/assets'
+            });
+          });
+        </script> 
+
+      <% end %>
+    <% else %>
+      <h2>Oops!! No GIG found ...</h2>
+    <% end %>
+  </div>
+</div>
+
+
+

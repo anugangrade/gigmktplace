@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-md-2"><%= image_tag @user.avatar.url, :class=>"profile_image" %></div>
+  <div class="col-md-10">
+    <h1><%=@user.name%></h1>
+    <div id="star" style="float:left"></div> &nbsp;&nbsp;
+    FROM : <b><%= @user.location.upcase if !@user.location.nil? %></b>&nbsp;&nbsp;
+    <%= link_to "CONTACT", conversation_path(@user), :class=>"go_green" if @user != current_user %>
+    
+    <p><%=@user.description if !@user.description.nil? %></p>
+
+    <%= link_to 'Edit Profile', edit_user_registration_path, :class=>"go_green" if (user_signed_in? && @user == current_user) %>
+  </div>
+</div>
+
+<div class="profile_gig_list">
+  <% if !@gigs.blank? %>
+    <% count = 0%>
+    <b> <%=@user.name%>'s gigs </b>
+    <div class="row">
+      <% @gigs.each do |gig| %>
+        <% first_video = gig.videos.first %>
+        <%if count%4==0%>
+          </div><div class="row">
+        <% end %>
+        <div class="col-md-3" style="padding:5px;"> 
+          <div style="border: 3px solid #E7E7E7;padding:4px;">
+
+            <% if first_video.nil? %>
+              <%= link_to image_tag(gig.images.first.image.url, :height=>"130px",:width=>"238px"),gig_path(gig) %>
+            <% else %>
+              <div class="videoWrapper">
+                <% youtube_id = first_video.video_url.split("=")[1] %>
+                <iframe title="YouTube video player" width="225" height="225" src="http://www.youtube.com/embed/<%= youtube_id %>?controls=2" frameborder="0" allowfullscreen></iframe>
+              </div>
+            <% end %>
+            <h4><%= link_to gig.title ,gig_path(gig), :class=>"go_green"%></h4>
+            <hr>
+            <div class="row">
+              <a href="<%= profile_path(@user) %>">
+                <div class="col-md-2"><%= image_tag @user.avatar.url(:tiny) %></div>
+                <div class="col-md-6"><%= @user.name %> <br/> <%= @user.location %></div>
+              </a>
+              <div class="col-md-4"><div class="star_<%= @user.id %>" style="float:right"></div></div>
+            </div>
+          </div>
+        </div>
+        <% count = count+1%>
+      <% end %>  
+    </div>
+  <% else %>
+    <h3>You haven't Created Any Gig yet... Start with creating a <%= link_to "GIG", new_gig_path, :class=>"go_green" %></h3>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+  raty_js()
+    $('#star').raty({
+      readOnly: true,
+      score: <%= @user.average_rating %>,
+      path: '/assets'
+    });
+  });
+</script> 
+
+<style>
+
+.tab-content {
+    border: 1px solid #DDDDDD;
+    width: 50%;
+}
+.nav.nav-tabs {
+    width: 50%;
+}
+.profile_image{
+  height: 130px;
+  width: 140px;
+}
+</style>

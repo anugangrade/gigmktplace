@@ -1,0 +1,36 @@
+/*----- create a gig--------------*/
+.cr_gig{
+    width: 50%;float: left;font-size: 22px;
+}
+.gig_lan{float: right;margin-top: 19px;}
+.stages i{ float: left;
+    margin-right: 6px;
+    margin-top: 17px;}
+.stages{float: left; display: inline;margin-right: 20px;color: #878786;}
+.stages span{
+     display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 10px;
+    padding-top: 16px;
+    text-transform: uppercase;
+    vertical-align: top;
+    padding-bottom: 10px;
+}
+.wh_active{color:#ffa846;}
+.top_80{margin-top: 80px !important;}
+.full_gig_blog{width: 100%; display: block;overflow: hidden;margin-top: 34px; }
+.labels{display: inline; } 
+.fields{float:  right; display: inline; width: 85%; }
+.area1{width: 100%;display: block;min-height: 100px; border-radius: 4px;border: 1px solid #eee;color: #333;}
+.fields textarea{font-size: 14px;}
+.tp_sp{line-height: 33px;}
+
+
+.cen_areas{  display: block;
+    margin: 13px auto;
+    overflow: hidden;
+    width: 103px;}
+.mid-space{max-width: 250px;}
+.this_wd{max-width: 150px;}
+.max{line-height: 33px;padding-right: 10px;}

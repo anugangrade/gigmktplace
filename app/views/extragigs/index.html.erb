@@ -1,0 +1,29 @@
+<h1>Listing <%= @gig.title %> Extras</h1>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Amount per extragig</th>
+      <th>Express boolean</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @extragigs.each do |extragig| %>
+      <tr>
+        <td><%= extragig.title %></td>
+        <td><%= extragig.amount %></td>
+        <td><%= extragig.express_boolean %></td>
+        <td><%= link_to 'Show', [@gig,extragig] %></td>
+        <td><%= link_to 'Edit', edit_gig_extragig_path(@gig.id, extragig.id) %></td>
+        <td><%= link_to 'Destroy', [@gig,extragig], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Extragig', new_gig_extragig_path(@gig), :class=>"btn btn-default" %>

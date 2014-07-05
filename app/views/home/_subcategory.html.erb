@@ -1,0 +1,3 @@
+<% @subcategory=Category.where("title LIKE ?", "%#{params[:category]}%") %>
+<%=label_tag "subcategory" %>
+ <%= select_tag :category_id, options_from_collection_for_select(@subcategory, "id", "subtitle"),:prompt=>"select subcategory",:class=>"form-control", onchange: "this.form.submit();"%>

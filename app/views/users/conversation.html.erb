@@ -1,0 +1,44 @@
+<h2><%= image_tag @user.avatar.url(:thumb) %> Conversation with <%= link_to @user.name, profile_path(@user ) , :class=>"go_green"%></h2>
+
+<%= link_to "See All Conversations", conversations_path, :class=>"go_green" %>
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active"><a href="#home" role="tab" data-toggle="tab">Discussion</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active page_tab" id="home">
+    <% if !@messages.nil? %>
+      <% @messages.each do |message| %>
+        <% user = User.find(message.user_id) %>
+        <div class="row" style="<% if (user == current_user) %> background-color:ghostwhite <% end %>">
+          <div class="col-md-1"><%= image_tag user.avatar.url(:thumb), :class=>"conv_image" %></div>
+          <div class="col-md-11">
+            <b class="go_green"><%= ( (user == current_user) ? "Me" : (link_to user.name, profile_path(user.id), :class=>"go_green") ) %> </b> <br/>
+            <%= message.content %><br/>
+            <% if !message.attachments.blank? %>
+              Attachments: 
+              <% message.attachments.each do |attachment| %>
+                <%= image_tag attachment.file.url, :style=>"width:100px" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div><br/>
+      <% end %>
+    <% end %>
+    <b>Send <span class="go_green"><%= @user.name %></span> a message </b>
+    <%= form_for(@message, url: message_path, html: {multipart: true}) do |f| %>
+      <%= fields_for :conversation do |c| %>
+        <%= c.hidden_field :user_id, :value=> @user.id %>
+        <%= c.hidden_field :sender_id, :value=> current_user.id %>
+      <% end %>
+      <%= f.text_area :content, :class=> "form-control", :rows=>"3", :placeholder=>"Type your message here..." %>
+      <%= f.hidden_field :user_id, :value=> current_user.id %>
+      <%= fields_for :attachment do |a| %>
+        <%= a.file_field :file, multiple: true, :style=>"float:left" %>
+      <% end %>
+      <%= f.submit "Send", :class=>"btn btn-success" %>
+    <% end %>
+  </div>
+</div>

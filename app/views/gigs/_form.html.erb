@@ -1,0 +1,122 @@
+<%= form_for(@gig, :html => { :multipart => true }) do |f| %>
+  <% if @gig.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@gig.errors.count, "error") %> prohibited this gig from being saved:</h2>
+
+      <ul>
+      <% @gig.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="full_gig_blog top_80">
+    <div class="labels">GIG TITLE</div>
+    <div class="fields">
+      <%= f.text_area :title, :class=>"form-control", :placeholder=>"I will do something I'm really good at ...... " %>
+    </div>
+  </div><!--full_blog-->
+     
+  <div class="full_gig_blog">
+    <div class="labels tp_sp">CATEGORY</div>
+    <div class="fields">
+      <div class="col-lg-4">
+      <%=select_tag "category", options_for_select(Category.all.collect {|a| [a.title]}.uniq),:prompt=>"select category", :class=>"form-control" %>
+      </div>
+      <div id="subcategory" class="col-lg-4"> <%=render "subcategory" %></div>
+    </div>
+      
+  </div><!--full_blog--> 
+     
+     
+       <div class="full_gig_blog">
+           <div class="labels">COVER PHOTOS</div>
+           <div class="fields cover-imgs">
+              <%= file_field_tag "images[]", type: :file, multiple: true %>
+           </div>
+     </div><!--full_blog--> 
+    
+
+      <div class="full_gig_blog">
+           <div class="labels tp_sp">GIG GALLERY</div>
+           <div class="fields bg-imgs">
+              <div class="add_more_videos"> 
+                <%= label_tag :videos, "Copy and paste Youtube url" %><br>
+                <%= text_field_tag "videos[1]", '', :class=>"form-control" %>
+              </div>
+
+              <%= link_to "add more", "#", :id=>"add_videos", :class=>"btn btn-default" %>
+           </div>
+     </div><!--full_blog--> 
+     
+     
+      <div class="full_gig_blog">
+           <div class="labels">DESCRIPTION</div>
+           <div class="fields">
+              <%= f.text_area :description, :class =>"form-control" %>
+           </div>
+     </div><!--full_blog-->
+     
+       <div class="full_gig_blog">
+           <div class="labels tp_sp">TAGS</div>
+           <div class="fields">
+                <div class="form-group">
+                   <%= f.text_field :tag_list, :class=>"form-control" %>
+                   <div class="for-f">
+                    <div class="pull-right">tags separated with commas</div>
+                    </div>
+                </div>
+           </div>
+     </div><!--full_blog-->
+     
+      <div class="full_gig_blog">
+           <div class="labels tp_sp">EXPRESS BOOLEAN</div>
+           <div class="fields">
+              <%= f.check_box :express_boolean %>
+           </div>
+     </div><!--full_blog--> 
+       
+         <div class="full_gig_blog">
+           <div class="labels">INSTRUCTIONS<br /> FOR BYER</div>
+           <div class="fields">
+              <%= f.text_area :instructions_for_buyer, :class=>"form-control" %>
+           </div>
+     </div><!--full_blog-->
+     
+      <div class="full_gig_blog">
+           <div class="fields">
+               <%= f.submit :class=>"btn btn-success btn-large" %>
+           </div>
+           
+     </div><!--full_blog-->
+<% end %> 
+
+
+
+<script type="text/javascript">
+$('#category').change(function(){
+
+  $.ajax({
+    url: "<%= new_gig_path%>",
+    type: "GET",
+    data: {category: this.value},
+  })
+  return false;
+});
+
+</script>
+
+<script>
+ var index = $('add_more_videos').size() + 2;
+
+$("#add_videos").click(function(){
+
+  b='<input type="text" name="videos['+index+']" id="videos_'+index+'" class="form-control">'
+
+  $(".add_more_videos").append(b)
+     index++;
+     return false;
+})     
+
+</script>

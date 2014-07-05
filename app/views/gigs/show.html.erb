@@ -1,0 +1,177 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>
+        <strong><%= @gig.title %></strong>
+      </h1>
+      <ol class="breadcrumb">
+        <li>
+          CREATED <%= distance_of_time_in_words_to_now(@gig.created_at).upcase %> AGO, IN 
+          <%= link_to Category.find(@gig.category_id).title.upcase, root_path(search_by: Category.find(@gig.category_id).title), :class=>"go_green" %> / 
+          <%= link_to Category.find(@gig.category_id).subtitle.upcase, root_path(search_by: Category.find(@gig.category_id).id), :class=>"go_green" %>
+        </li>
+        <li> <%= social_share_button_tag(@gig.title, :url => request.original_url) %></li>
+        
+      </ol>
+
+
+
+      <ul class="bxslider">
+       <% @slide.each do |image,index| %>
+          <% if !image.try(:image).nil?%>
+           <%= image_tag (image.image.url),:class=>"img" %>
+          <% else %>
+            <% youtube_id = image.video_url.split("=")[1] %>
+            <iframe title="YouTube video player" width="480" height="460" src="http://www.youtube.com/embed/<%= youtube_id %>?controls=2" frameborder="0" allowfullscreen></iframe>
+          <% end %>
+        <% end %>
+      </ul>
+
+    </div>
+
+    <div class="col-md-6">
+      <div id="user_star"></div>
+
+      <% if @gig.express_boolean %>
+        <p>Delivered withing 24 hours</p>
+      <% end %>
+
+      <p>
+        <strong>Created by:</strong>
+        <b><%=link_to (User.find(@gig.user_id).name),"/profile/#{User.find(@gig.user_id).id}" %></b>
+      </p>
+
+      <p>
+        <strong>Listed Tags:</strong>
+        <%= @gig.tag_list %>
+      </p>
+
+      <p>
+        <strong>Description:</strong>
+        <%= @gig.description %>
+      </p>
+
+      <% if @gig.user == current_user %>
+        <%= link_to 'Edit', edit_gig_path(@gig), :class=>"btn btn-default" %>
+        <%= link_to "Create Extragig", new_gig_extragig_path(@gig), :class=>"btn btn-default" %>
+      <% end %>
+      <p>
+        <%= form_tag purchase_gig_path do %>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
+               <h2> Check out my Gig Extras</h2>
+            </li>
+            <% @gig.extragigs.each do |extragig| %>
+              <li class="list-group-item">
+                <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
+                <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
+                <%= extragig.title %>
+              </li>
+            <% end %>
+          </ul>
+          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right", :id=>"order_link", :name=>"5" %>
+        <% end %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function(){
+    raty_js()
+
+    $('#user_star').raty({
+      readOnly: true,
+      score: <%= @avg_rate %>,
+      path: '/assets'
+    });
+  })
+
+  $(document).ready(function(){
+    $('.bxslider').bxSlider({
+      adaptiveHeight: true,
+      infiniteLoop: false,
+      hideControlOnEnd: true
+    });
+
+    $("#quantity").change(function(){
+      var value = ($(this).val() *5 )
+      $("#order_link").val('Order Now($'+(value)+')')
+      $("#order_link").attr('name', value)
+
+    })
+
+
+    $(".quantity").change(function(){
+      extragig_id = this.id.split("_")[1]
+      
+      $("#checkbox_"+extragig_id).prop('checked', true);
+
+      $.each($('.quantity'), function(index, value){
+        var gig_id = $(value).attr("id")
+        var gig_value = $(value).val()
+        if (gig_id == "quantity") {
+          amount = (gig_value*5)
+        }
+        else{
+          if ($("#checkbox_"+gig_id.split("_")[1]).is(':checked')) {
+            amount += ((gig_value.split("_")[0]) * (gig_value.split("_")[1]) )
+          }
+        }
+      });
+      $("#order_link").val('Order Now($'+(amount)+')')
+    })
+
+    $(".extra_checkbox").change(function(){
+      if ($(this).is(':checked')) {
+        $.each($('.quantity'), function(index, value){
+          var gig_id = $(value).attr("id")
+          var gig_value = $(value).val()
+          if (gig_id == "quantity") {
+            amount = (gig_value*5)
+          }
+          else{
+            if ($("#checkbox_"+gig_id.split("_")[1]).is(':checked')) {
+              amount += ((gig_value.split("_")[0]) * (gig_value.split("_")[1]) )
+            }
+          }
+        });
+      }
+      else{
+        $.each($('.quantity'), function(index, value){
+          var gig_id = $(value).attr("id")
+          var gig_value = $(value).val()
+          if (gig_id == "quantity") {
+            amount = (gig_value*5)
+          }
+          else{
+            if ($("#checkbox_"+gig_id.split("_")[1]).is(':checked')) {
+              amount += ((gig_value.split("_")[0]) * (gig_value.split("_")[1]) )
+            }
+          }
+        });
+      }
+      $("#order_link").val('Order Now($'+(amount)+')')
+    })
+
+
+  });
+</script>
+
+
+<style>
+  .embedly-embed{height: 460px !important;}
+  .bx-viewport{ height:470px !important; }
+
+
+  .bx-wrapper, .bx-viewport img{
+    height: 458px !important; /*provide height of slider*/
+}
+
+.right{
+  float: right;
+}
+
+
+</style>

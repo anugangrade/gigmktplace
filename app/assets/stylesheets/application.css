@@ -1,0 +1,63 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require video-js
+ *= require social-share-button
+ *= require_self
+ *= require bxslider
+ *= require 'masonry/basic'
+ *= require 'masonry/centered'
+ *= require 'masonry/fluid'
+ *= require 'masonry/gutters'
+ *= require 'masonry/infinitescroll'
+ *= require 'masonry/right-to-left'
+ *= require 'masonry/transitions'
+ *= require_tree .
+ */
+
+.navbar{
+	margin-bottom: 0 !important;
+}
+
+.category_list {
+    background-color: #00B22D !important;
+}
+
+.category_list ul li a {
+    color: white !important;
+}
+
+.go_green{
+	color: #00B22D !important;
+}
+
+.inbox_user_image{
+	width: 30px;
+	border: 1px solid gray;
+}
+
+.profile_gig_list{
+	background-color: background;
+    margin-top: 30px;
+}
+
+.videoWrapper {
+  position: relative;
+  padding-bottom: 70%; /* 16:9 */
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%
+}
