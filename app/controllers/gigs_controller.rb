@@ -1,5 +1,6 @@
 class GigsController < ApplicationController
   before_action :set_gig, only: [:show, :edit, :update, :destroy, :purchase, :confirm_order]
+  before_filter :authenticate_user!  , :except=> [:index, :show, :tag_cloud]
   # GET /gigs
   # GET /gigs.json
   def index

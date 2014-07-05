@@ -1,6 +1,7 @@
 class ExtragigsController < ApplicationController
   before_action :set_extragig, only: [:show, :edit, :update, :destroy]
   before_action :set_gig
+  before_filter :authenticate_user! 
 
   # GET /extragigs
   # GET /extragigs.json

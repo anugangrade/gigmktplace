@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:finish_signup, :profile, :conversation]
+  before_filter :authenticate_user!  , :except=> [:profile]
 
   def finish_signup
     if request.patch? && params[:user] #&& params[:user][:email]
