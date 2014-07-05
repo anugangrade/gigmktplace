@@ -59,4 +59,9 @@ gem 'masonry-rails'
 gem 'activemerchant'
 
 
-# gem "rails12_factor" , group: :production
+
+group :production do 
+  gem "rails_12factor"
+  gem "activerecord-postgresql-adapter"
+  gem 'pg'
+end 
