@@ -233,7 +233,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   
   # production
-  config.omniauth :facebook,'1479353712302173','4b7a10a23f3e8b5bbe9fdb029b7e1a9e'
+  config.omniauth :facebook,'293736107467010','2c1a471791c6f23052c590c1027c9878'
   #development
   # config.omniauth :facebook, '1374702796089833','2aa34dfb69c3749dcd646a0a4239a072'
   
