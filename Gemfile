@@ -10,7 +10,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'open_uri_redirections'
 
-gem "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
+gem "paperclip", "~> 3.5.3"
 gem "paperclip-ffmpeg"
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'

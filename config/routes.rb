@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get '/profile/:id' => 'users#profile', :as=>"profile"
   get '/conversation/:id' => 'users#conversation', :as => "conversation"
   get '/conversations' => 'users#conversations', :as => "conversations"
+  get '/download_file/:id' => 'users#download_file', :as => "download_file"
   post '/message' => "users#message"
 
   # The priority is based upon order of creation: first created -> highest priority.

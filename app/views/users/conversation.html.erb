@@ -15,14 +15,20 @@
         <div class="row" style="<% if (user == current_user) %> background-color:ghostwhite <% end %>">
           <div class="col-md-1"><%= image_tag user.avatar.url(:thumb), :class=>"conv_image" %></div>
           <div class="col-md-11">
-            <b class="go_green"><%= ( (user == current_user) ? "Me" : (link_to user.name, profile_path(user.id), :class=>"go_green") ) %> </b> <br/>
-            <%= message.content %><br/>
-            <% if !message.attachments.blank? %>
-              Attachments: 
-              <% message.attachments.each do |attachment| %>
-                <%= image_tag attachment.file.url, :style=>"width:100px" %>
-              <% end %>
-            <% end %>
+            <div class"row">
+              <div class="col-md-7">
+                <b class="go_green"><%= ( (user == current_user) ? "Me" : (link_to user.name, profile_path(user.id), :class=>"go_green") ) %> </b> <br/>
+                <%= message.content %>
+              </div>
+              <div class="col-md-5" style="border-left:1px solid;">
+                <% if !message.attachments.blank? %>
+                  ATTACHMENTS <BR/> 
+                  <% message.attachments.each do |attachment| %>
+                    <a href="<%= download_file_path(attachment) %>"><%= image_tag "download.png", :style=>"width: 15px;" %>&nbsp;&nbsp;<%= attachment.file_file_name %> </a><br/>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
           </div>
         </div><br/>
       <% end %>

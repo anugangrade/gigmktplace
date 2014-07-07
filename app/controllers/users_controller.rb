@@ -45,6 +45,11 @@ class UsersController < ApplicationController
     redirect_to conversation_path(@receiver)
   end
 
+  def download_file
+    @attachment = Attachment.find(params[:id])
+    send_file "#{Rails.root}/public/assets/attachments/#{@attachment.id}/files/original.#{@attachment.file_file_name.split(".").last}", :type=>@attachment.file_content_type, :x_sendfile=>true
+  end
+
 
   private
     def set_user

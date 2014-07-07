@@ -1,7 +1,8 @@
 class Attachment < ActiveRecord::Base
 	belongs_to :message
 
-	has_attached_file :file, :styles => { :medium => "300x300>", :thumb => "100x100>" }
-	do_not_validate_attachment_file_type :file
+	has_attached_file :file  ,
+                    :url => "/assets/:class/:id/:attachment/:style.:extension",
+                    :path => ":rails_root/public/assets/:class/:id/:attachment/:style.:extension"
 
 end

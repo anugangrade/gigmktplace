@@ -72,6 +72,16 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
+  config.after_initialize do
+    ActiveMerchant::Billing::Base.mode = :test
+    paypal_options = {
+      :login => "anuyuvasoft104-facilitator_api1.gmail.com",
+      :password => "1382344649",
+      :signature => "AAvndsjwimuOH7VRlY.etjgwdHdfA0yP7JUpHRpRNWEv2Lhn.YkFEPHC"
+    }
+    ::EXPRESS_GATEWAY = ActiveMerchant::Billing::PaypalExpressGateway.new(paypal_options)
+  end
+
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
