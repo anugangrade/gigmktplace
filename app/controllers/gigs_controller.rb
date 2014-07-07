@@ -116,8 +116,8 @@ class GigsController < ApplicationController
       )
     else
       response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
-        return_url: 'http://gig-mktplace.herokuapp.com/'+confirm_order_gig_path ,
-        cancel_return_url: 'http://gig-mktplace.herokuapp.com/',
+        return_url: 'http://gig-mktplace.herokuapp.com'+confirm_order_gig_path ,
+        cancel_return_url: 'http://gig-mktplace.herokuapp.com',
         currency: "USD",
         items: extra_array
       )
