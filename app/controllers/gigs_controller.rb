@@ -107,12 +107,22 @@ class GigsController < ApplicationController
     end
     extra_array = extra_array.compact
 
-    response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
-      return_url: 'http://localhost:3000'+confirm_order_gig_path ,
-      cancel_return_url: 'http://localhost:3000',
-      currency: "USD",
-      items: extra_array
-    )
+    if Rails.env == "development"
+      response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
+        return_url: 'http://localhost:3000'+confirm_order_gig_path ,
+        cancel_return_url: 'http://localhost:3000',
+        currency: "USD",
+        items: extra_array
+      )
+    else
+      response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
+        return_url: 'http://gig-mktplace.herokuapp.com/'+confirm_order_gig_path ,
+        cancel_return_url: 'http://gig-mktplace.herokuapp.com/',
+        currency: "USD",
+        items: extra_array
+      )
+      
+    end
     if response.success?
       current_user.transactions.create(gig_id: @gig.id, quantity:params[:quantity], status: "Pending")
       if !params["extragig"].nil?
