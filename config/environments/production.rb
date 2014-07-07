@@ -27,7 +27,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  config.assets.compile = true
 
   # Generate digests for assets URLs.
   config.assets.digest = true
@@ -72,6 +72,9 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
+  # Disable automatic flushing of the log to improve performance.
+  # config.autoflush_log = false
+
   config.after_initialize do
     ActiveMerchant::Billing::Base.mode = :test
     paypal_options = {
@@ -82,8 +85,6 @@ Rails.application.configure do
     ::EXPRESS_GATEWAY = ActiveMerchant::Billing::PaypalExpressGateway.new(paypal_options)
   end
 
-  # Disable automatic flushing of the log to improve performance.
-  # config.autoflush_log = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new

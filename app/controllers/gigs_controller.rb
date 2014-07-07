@@ -92,10 +92,11 @@ class GigsController < ApplicationController
     $total_amount = (params[:quantity].to_i)*5
 
     extra_array = [{name: "Order Gig", description: "Purchase #{@gig.title}", quantity: params[:quantity], amount: 500}]
-    if !params["extraquantity"].nil?
+
+    if !params["extragig"].nil?
       params["extraquantity"].each do |extra|
-        extra_id = extra.split("_")[0]
-        quantity =  extra.split("_")[1].to_i
+        quantity =  extra.split("_")[0].to_i
+        extra_id = extra.split("_")[2]
         if params["extragig"].include? extra_id
           extragig = Extragig.find(extra_id)
           $total_amount += (quantity*(extragig.amount))
@@ -104,7 +105,6 @@ class GigsController < ApplicationController
         extra_array << inner_element
       end
     end
-
     extra_array = extra_array.compact
 
     response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
@@ -115,7 +115,7 @@ class GigsController < ApplicationController
     )
     if response.success?
       current_user.transactions.create(gig_id: @gig.id, quantity:params[:quantity], status: "Pending")
-      if !params["extraquantity"].nil?
+      if !params["extragig"].nil?
         params["extraquantity"].each do |extra|
           extra_id = extra.split("_")[0]
           quantity =  extra.split("_")[1].to_i

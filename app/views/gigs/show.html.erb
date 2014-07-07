@@ -64,13 +64,13 @@
             </li>
             <% @gig.extragigs.each do |extragig| %>
               <li class="list-group-item">
-                <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
+                <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s+"_"+extragig.id.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
                 <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
                 <%= extragig.title %>
               </li>
             <% end %>
           </ul>
-          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right", :id=>"order_link", :name=>"5" %>
+          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right", :id=>"order_link", :name=>"5" if @gig.user != current_user %>
         <% end %>
       </p>
     </div>
