@@ -1,9 +1,4 @@
-* 									{ margin: 0; padding: 0; }
-body								{ font: 14px Helvetica, Sans-Serif; } 
-#page-wrap							{ width: 800px; margin: 25px auto; } 
-a									{ text-decoration: none; }
 ul									{ list-style: none; }
-p                                   { margin: 15px 0; }
 
 /* 
 	LEVEL ONE
@@ -12,7 +7,7 @@ ul.dropdown a:hover		            { z-index: 1000; }
 ul.dropdown a:active                { color: #ffa500;z-index: 1000; }
 ul.dropdown li:last-child a         { border-right: none; } /* Doesn't work in IE */
 ul.dropdown li.hover,
-ul.dropdown li:hover                { background: #F3D673; position: relative;z-index: 1000; }
+ul.dropdown li:hover                { position: relative;z-index: 1000; }
 ul.dropdown li.hover a              { color: black;z-index: 1000; }
 
 
@@ -20,8 +15,9 @@ ul.dropdown li.hover a              { color: black;z-index: 1000; }
 	LEVEL TWO
 */
 ul.dropdown ul 						{ width: 220px; visibility: hidden; position: absolute; top: 100%; left: 0;z-index: 1000; }
-ul.dropdown ul li 					{ font-weight: normal; background: #f6f6f6;
-									  border-bottom: 1px solid #ccc; float: none;z-index: 1000; }
+ul.dropdown ul li 					{ font-weight: normal;
+									  float: none;z-index: 1000;
+									  padding: 5px; }
 									  
                                     /* IE 6 & 7 Needs Inline Block */
 ul.dropdown ul li a					{ border-right: none; width: 100%; display: inline-block;z-index: 1000; } 
@@ -29,7 +25,6 @@ ul.dropdown ul li a					{ border-right: none; width: 100%; display: inline-block
 /* 
 	LEVEL THREE
 */
-ul.dropdown ul ul 					{ left: 100%; top: 0;z-index: 1000; }
+ul.dropdown ul ul 					{ left: 100%; top: 0;z-index: 1000; background: #f6f6f6;}
 ul.dropdown li:hover > ul 			{ visibility: visible;z-index: 1000; }
 
-ul.dropdown a:hover					{background-color:rgb(243, 238, 238)}

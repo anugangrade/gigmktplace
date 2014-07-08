@@ -13,11 +13,12 @@
 
     <div class="full_gig_blog">
       <div class="fields">
-        <%= f.submit "Send me reset password instructions", :class=>"btn btn-success" %>
+        <%= f.submit "Send me reset password instructions", :class=>"btn btn-success" %> OR 
+        <%= render "devise/shared/links" %>
       </div>
     </div><!--full_blog-->
   <% end %>
 
 </div><!-- 9 col-->   
 
-<%= render "devise/shared/links" %>
+
