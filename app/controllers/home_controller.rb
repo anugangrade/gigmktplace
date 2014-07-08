@@ -15,11 +15,16 @@ class HomeController < ApplicationController
   		@gigs = Gig.all
   	end
 
+    @lists=[] 
     @videos=[] 
     @gigs.each do |gig|
-      @videos << gig.videos.first if !gig.videos.first.nil?
+      if !gig.videos.first.nil?
+        @lists << gig.videos.first
+      else
+        @lists << gig.images.first
+      end
     end
-
+    @lists = @lists.compact
   end
 
 

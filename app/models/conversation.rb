@@ -6,14 +6,12 @@ class Conversation < ActiveRecord::Base
 		receiver_convs = self.where("user_id = ? OR sender_id = ?", receiver.id, receiver.id)
 		if !receiver_convs.blank? 
 			receiver_convs.each do |receiver_conv|
-				if receiver_conv.user_id == receiver.id
-					if receiver_conv.sender_id == sender.id
-						return receiver_conv
-					end
-				elsif receiver_conv.sender_id == receiver.id
-					if receiver_conv.user_id == sender.id
-						return receiver_conv
-					end
+				if receiver_conv.user_id == receiver.id && receiver_conv.sender_id == sender.id
+					return receiver_conv
+				elsif receiver_conv.sender_id == receiver.id && receiver_conv.user_id == sender.id
+					return receiver_conv
+				else
+					return nil
 				end
 			end
 		else

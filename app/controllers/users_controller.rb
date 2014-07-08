@@ -23,9 +23,13 @@ class UsersController < ApplicationController
   end
 
   def conversation
-    @conversation = Conversation.find_conversation(@user, current_user)
-    @messages = @conversation.messages if !@conversation.nil?
-    @message = Message.new
+    if @user != current_user
+      @conversation = Conversation.find_conversation(@user, current_user)
+      @messages = @conversation.messages if !@conversation.nil?
+      @message = Message.new
+    else
+      redirect_to conversations_path
+    end
   end
 
   def message

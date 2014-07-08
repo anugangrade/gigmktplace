@@ -41,25 +41,25 @@ class GigsController < ApplicationController
   # POST /gigs
   # POST /gigs.json
   def create
-    @user= current_user
-    @gig = @user.gigs.new(gig_params)
+    @gig = current_user.gigs.new(gig_params)
 
     respond_to do |format|
-      if @gig.save
+      if (!params[:images].nil? || !params[:videos].first[1].blank?) && @gig.save
+        if params[:images]
+          params[:images].each { |image|
+            @gig.images.create(image: image)
+          }
+        end
+        if (1..params[:videos].count).each do |video|
+            @gig.videos.create(video_url: params[:videos][video.to_s]) if !params[:videos][video.to_s].blank?
+          end
+        end
         format.html { redirect_to @gig, notice: 'Gig was successfully created.' }
         format.json { render :show, status: :created, location: @gig }
       else
+        @gig.errors["gig"] = "must either have a Image or Video attached" if @gig.errors.full_messages.blank?
         format.html { render :new }
         format.json { render json: @gig.errors, status: :unprocessable_entity }
-      end
-    end
-    if params[:images]
-      params[:images].each { |image|
-        @gig.images.create(image: image)
-      }
-    end
-    if (1..params[:videos].count).each do |video|
-        @gig.videos.create(video_url: params[:videos][video.to_s]) if !params[:videos][video.to_s].blank?
       end
     end
   end

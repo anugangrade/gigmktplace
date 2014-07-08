@@ -1,3 +1,21 @@
 // Place all the styles related to the Home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.star > img {
+    height: 10px;
+}
+.star{
+	width : 75px !important;
+}
+
+.gig_price {
+  color: white;
+  font-weight: bold;
+  padding: 3px 7px;
+  position: absolute;
+  right: 35px;
+  top: 35px;
+  background-color: #00b22d;
+}

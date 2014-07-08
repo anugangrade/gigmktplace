@@ -6,6 +6,8 @@ class Gig < ActiveRecord::Base
 	has_many :transactions
 	has_many :extragigs
 
+	validates_presence_of :title, :category_id
+
 	acts_as_taggable 
 
 	def average_rating
