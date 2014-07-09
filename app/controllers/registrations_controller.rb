@@ -5,6 +5,14 @@ def new
 
   def create
     super
+
+    @username = params['user']['name'].downcase.split(" ")[0]
+    @users_username = User.where("username LIKE ?",  "%#{@username}%")  
+    if !@users_username.blank?
+      @number = @users_username.collect(&:username).last.scan( /\d+$/ ).first.to_i
+      @username = @username+(@number+1).to_s
+    end
+    @user.update_attributes(username: @username)
   end
 
   def edit

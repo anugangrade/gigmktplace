@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  
-
   resources :gigs do 
     member do 
       post "purchase"
@@ -13,10 +11,12 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",:registrations => "registrations" }
 
   get 'home/index'
+  get '/categories/:category_url' => "home#search_by_category", :as => 'search_by_category'
+  get '/categories/:category_url/:subcategory_url' => "home#search_by_subcategory", as: "search_by_subcategory"
   
   match '/profile/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
   
-  get '/profile/:id' => 'users#profile', :as=>"profile"
+  get '/:username' => 'users#profile', :as=>"profile"
   get '/conversation/:id' => 'users#conversation', :as => "conversation"
   get '/conversations' => 'users#conversations', :as => "conversations"
   get '/download_file/:id' => 'users#download_file', :as => "download_file"

@@ -11,14 +11,18 @@
 <body>
     <%= render "layouts/header" %>
     <% flash.each do |key, value| %>
-      <div class="<%= flash_class(key) %>">
+    <div class="<%= flash_class(key) %>">
         <%= value %>
       </div>
     <% end %>
-
-    <div class="container">
+    <br/>
+    <% if params[:controller] == "home" %>
       <%= yield %>
-  	</div>
+    <%else%>
+      <div class="container">
+        <%= yield %>
+      </div>
+    <% end %>
 
     <%= render "layouts/footer" %>
 

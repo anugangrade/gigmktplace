@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <h1>
         <strong><%= @gig.title %></strong>
       </h1>
@@ -27,36 +27,8 @@
         <% end %>
       </ul>
 
-    </div>
-
-    <div class="col-md-6">
-      <div id="user_star"></div>
-
-      <% if @gig.express_boolean %>
-        <p>Delivered withing 24 hours</p>
-      <% end %>
-
       <p>
-        <strong>Created by:</strong>
-        <b><%=link_to (User.find(@gig.user_id).name),"/profile/#{User.find(@gig.user_id).id}" %></b>
-      </p>
-
-      <p>
-        <strong>Listed Tags:</strong>
-        <%= @gig.tag_list %>
-      </p>
-
-      <p>
-        <strong>Description:</strong>
-        <%= @gig.description %>
-      </p>
-
-      <% if @gig.user == current_user %>
-        <%= link_to 'Edit', edit_gig_path(@gig), :class=>"btn btn-default" %>
-        <%= link_to "Create Extragig", new_gig_extragig_path(@gig), :class=>"btn btn-default" %>
-      <% end %>
-      <p>
-        <%= form_tag purchase_gig_path do %>
+        <%= form_tag purchase_gig_path, :id=>"purchase_gig_form" do %>
           <ul class="list-group">
             <li class="list-group-item">
               <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
@@ -70,9 +42,56 @@
               </li>
             <% end %>
           </ul>
-          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right", :id=>"order_link", :name=>"5" if @gig.user != current_user %>
+          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right order_link", :name=>"5" if @gig.user != current_user %>
         <% end %>
       </p>
+
+    </div>
+
+    <div class="col-md-4">
+      <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" if @gig.user != current_user %>
+
+      <hr>
+      <div id="user_star"></div>
+
+      <hr>
+      <% if @gig.express_boolean %>
+        <b>Delivered within 24 hours</b>
+      <% end %>
+      <hr>
+      <p>
+        <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
+        <strong>By:</strong>
+        <b style="font-size: x-large;"><%=link_to @gig.user.name,"/profile/#{@gig.user.id}", :class=>"go_green" %><br/> </b>
+          <span style="font-size: smaller; font-weight: 100;" >
+          <% if !@gig.user.location.nil? %>FROM: <%= @gig.user.location %><br/> <% end %>
+           JOINED OVER <%= distance_of_time_in_words_to_now(@gig.user.created_at).upcase %> AGO 
+         </span>
+      </p>
+      <hr>
+      
+      <p>
+        <%= @gig.description %>
+      </p>
+
+      <%= link_to "CONTACT ME", conversation_path(@gig.user), :class=>"go_green" %>
+      <hr>
+
+      <p>
+        <strong>Related Topics:</strong>
+        <ul class="tag_list">
+          <% @gig.tag_list.each do |tag| %>
+            <li><a href="#"><%= tag %></a></li>
+          <% end %>
+        </ul>
+      </p>
+
+
+      <% if @gig.user == current_user %>
+        <%= link_to 'Edit', edit_gig_path(@gig), :class=>"btn btn-default" %>
+        <%= link_to "Create Extragig", new_gig_extragig_path(@gig), :class=>"btn btn-default" %>
+      <% end %>
+      
     </div>
   </div>
 </div>
@@ -80,12 +99,26 @@
 <script>
   $(function(){
     raty_js()
-
-    $('#user_star').raty({
-      readOnly: true,
-      score: <%= @avg_rate %>,
-      path: '/assets'
-    });
+    <% if @user_gig_transaction.present? && current_user.ratings.where(gig_id: @gig.id, score: 0).present? %>
+      $('#user_star').raty({
+        score: <%= @rating.score %>,
+        path: '/assets',
+        click: function(score, evt) {
+          $.ajax({
+            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+            url: '/ratings/' + <%= @rating.id %>,
+            type: 'PATCH',
+            data: { score: score }
+          });
+        }
+      });
+    <% else %>
+      $('#user_star').raty({
+        score: <%= @avg_rate %>,
+        path: '/assets',
+        readOnly: true
+      });
+    <% end %>
   })
 
   $(document).ready(function(){
@@ -97,9 +130,8 @@
 
     $("#quantity").change(function(){
       var value = ($(this).val() *5 )
-      $("#order_link").val('Order Now($'+(value)+')')
-      $("#order_link").attr('name', value)
-
+      $(".order_link").val('Order Now($'+(value)+')')
+      $(".order_link").text('Order Now($'+(value)+')')
     })
 
 
@@ -120,7 +152,8 @@
           }
         }
       });
-      $("#order_link").val('Order Now($'+(amount)+')')
+      $(".order_link").val('Order Now($'+(amount)+')')
+      $(".order_link").text('Order Now($'+(amount)+')')
     })
 
     $(".extra_checkbox").change(function(){
@@ -152,10 +185,13 @@
           }
         });
       }
-      $("#order_link").val('Order Now($'+(amount)+')')
+      $(".order_link").val('Order Now($'+(amount)+')')
+      $(".order_link").text('Order Now($'+(amount)+')')
     })
 
-
+    $(".order_gig").click(function(){
+      $("#purchase_gig_form").submit()
+    })
   });
 </script>
 
@@ -173,5 +209,21 @@
   float: right;
 }
 
+ul.tag_list li{
+  background: none repeat scroll 0 0 #ccc;
+  border-radius: 3px;
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  padding: 3px 6px; 
+}
+
+ul.tag_list li a{
+  color: #fff;
+}
+
+ul.tag_list li:hover{
+  background-color: #00B22D;
+  color: #fff;
+}
 
 </style>

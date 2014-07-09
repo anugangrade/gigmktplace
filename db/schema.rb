@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140705194601) do
+ActiveRecord::Schema.define(version: 20140709181756) do
 
   create_table "attachments", force: true do |t|
     t.integer  "message_id"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20140705194601) do
     t.string   "subtitle"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "category_url"
+    t.string   "subcategory_url"
   end
 
   create_table "conversations", force: true do |t|
@@ -150,6 +152,7 @@ ActiveRecord::Schema.define(version: 20140705194601) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.string   "location"
+    t.string   "username"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

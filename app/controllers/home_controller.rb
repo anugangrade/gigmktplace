@@ -1,30 +1,20 @@
 class HomeController < ApplicationController
+  include HomeHelper
 
   def index 
-  	if params[:search_by]
-      if params[:search_by].to_i.zero?
-        @gigs = []
-        @category_ids = Category.where(title: params[:search_by]).collect(&:id)
-        @category_ids.each do |category_id| 
-          @gigs += Gig.where(:category_id=>category_id) if !Gig.where(:category_id=>category_id).blank?
-        end
-      else
-  		  @gigs=Gig.where(:category_id=>params[:search_by])
-      end
-  	else
-  		@gigs = Gig.all
-  	end
+  	@gigs = Gig.all
+    find_gig_and_banners
+  end
 
-    @lists=[] 
-    @videos=[] 
-    @gigs.each do |gig|
-      if !gig.videos.first.nil?
-        @lists << gig.videos.first
-      else
-        @lists << gig.images.first
-      end
-    end
-    @lists = @lists.compact
+  def search_by_category
+    @category_ids = Category.where(category_url: params[:category_url]).collect(&:id)
+    find_gig_and_banners
+  end
+
+
+  def search_by_subcategory
+    @category_ids = Category.where(category_url: params[:category_url], subcategory_url: params[:subcategory_url]).collect(&:id)
+    find_gig_and_banners
   end
 
 

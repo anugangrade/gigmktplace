@@ -15,7 +15,9 @@ class User < ActiveRecord::Base
     
 
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
-  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>", :tiny=>"50x50>" }, :default_url => "/images/missing.png"
+  validates_presence_of :name
+  validates_uniqueness_of :username, :allow_blank => true
+  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>", :tiny=>"50x50>" }, :default_url => "missing.png"
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
 
@@ -57,6 +59,14 @@ class User < ActiveRecord::Base
           location: auth.info.location
         )
         # user.skip_confirmation!
+        @username = user.name.downcase.split(" ")[0]
+        @users_username = User.where("username LIKE ?",  "%#{@username}%")  
+        if !@users_username.blank?
+          @number = @users_username.collect(&:username).last.scan( /\d+$/ ).first.to_i
+          user.username = @username+(@number+1).to_s
+        else
+          user.username = @username
+        end
         user.save!
       end
     end

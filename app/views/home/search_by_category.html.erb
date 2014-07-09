@@ -1,0 +1,20 @@
+<div class="category_banner"><br/>
+	<h1 style="color:white; margin-left: 6%; margin-top: 13%;"> <%= @category.title %></h1>
+</div>
+<br/>
+<div class="container">
+	<div class="jumbotron row">
+		<b>
+	  <% @subcategories.each do |subcategorie| %>
+	  	<div class="col-md-3" style="padding:8px">
+				<%= link_to subcategorie.subtitle, search_by_subcategory_path(category_url: @category.category_url, subcategory_url: subcategorie.subcategory_url), :class=>"go_green" %>
+			</div>
+		<% end %>
+		</b>
+	</div>
+
+
+	<div class="row">
+	  <%= render 'gigs/index' %>
+	</div>
+</div>

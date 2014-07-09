@@ -23,7 +23,7 @@
             <a href="#" class="dropdown-toggle header_links" data-toggle="dropdown"><%= image_tag current_user.avatar.url(:tiny) , :style=>"width: 30px;"%> &nbsp;&nbsp;<%= current_user.name %> <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><%= link_to "Inbox", conversations_path %></li>
-              <li><%= link_to "Profile", profile_path(current_user) %></li>
+              <li><%= link_to "Profile", profile_path(username: current_user.username ) %></li>
               <li><%= link_to "Edit Profile", edit_user_registration_path %></li>
               <li><%= link_to "Sign out", destroy_user_session_path,:method => :delete %></li>
             </ul>
@@ -56,12 +56,13 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Select Category <span class="caret"></span></a>
           <ul class="sub_menu dropdown-menu">
             <% all_categories.each do |category|%>  
-              <li><%= link_to category, home_index_path(search_by: category) %>
-                <% @subcategory=Category.where("title LIKE ?", "%#{category}%") %>
+              <% category = Category.find_by_title(category)%>
+              <li><%= link_to category.title, search_by_category_path(category_url: category.category_url) %>
+                <% @subcategory=Category.where("title LIKE ?", "%#{category.title}%") %>
                   <ul>
-                    <li><b> <%= category %> </b></li>
+                    <li><b> <%= category.title %> </b></li>
                     <% @subcategory.each do |subcategory| %>  
-                      <li><%= link_to subcategory.subtitle, home_index_path(search_by: subcategory.id) %></li>
+                      <li><%= link_to subcategory.subtitle, search_by_subcategory_path(category_url: category.category_url, subcategory_url: category.subcategory_url) %></li>
                     <% end %>  
                   </ul>
               </li>
@@ -108,7 +109,8 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <% all_categories.each do |category|%>  
-          <li><%= link_to category, home_index_path(search_by: category) %></li>
+          <% category = Category.find_by_title(category)%>
+          <li><%= link_to category.title, search_by_category_path(category_url: category.category_url) %></li>
         <% end %>
       </ul>
     </div><!-- /.navbar-collapse -->
