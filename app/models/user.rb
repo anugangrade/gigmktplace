@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
 
 
   def average_rating
-    ratings.sum(:score) / ratings.size
+    ratings.size.zero? ? 0 : ratings.sum(:score) / ratings.size
   end
 
   

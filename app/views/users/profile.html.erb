@@ -36,7 +36,7 @@
             <h4><%= link_to gig.title ,gig_path(gig), :class=>"go_green"%></h4>
             <hr>
             <div class="row">
-              <a href="<%= profile_path(username: @user.username) %>">
+              <a href="<%= profile_path(username: @user.username) %>" data-method="post">
                 <div class="col-md-2"><%= image_tag @user.avatar.url(:tiny) %></div>
                 <div class="col-md-6"><%= @user.name %> <br/> <%= @user.location %></div>
               </a>
