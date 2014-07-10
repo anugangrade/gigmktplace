@@ -58,7 +58,7 @@ gem 'masonry-rails'
 
 gem 'activemerchant'
 
-
+gem 'activeadmin', github: 'gregbell/active_admin'
 
 group :production do 
   gem "rails_12factor"
