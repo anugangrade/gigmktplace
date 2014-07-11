@@ -3,7 +3,7 @@
   <div class="col-md-10">
     <h1><%=@user.name%></h1>
     <div id="star" style="float:left"></div> &nbsp;&nbsp;
-    FROM : <b><%= @user.location.upcase if !@user.location.nil? %></b>&nbsp;&nbsp;
+    <% if !@user.location.nil? %>FROM : <b><%= @user.location.upcase  %></b>&nbsp;&nbsp; <% end %>
     <%= link_to "CONTACT", conversation_path(@user), :class=>"go_green" if @user != current_user %>
     
     <p><%=@user.description if !@user.description.nil? %></p>
@@ -37,7 +37,7 @@
             <hr>
             <div class="row">
               <a href="<%= profile_path(username: @user.username) %>" data-method="post">
-                <div class="col-md-2"><%= image_tag @user.avatar.url(:tiny) %></div>
+                <div class="col-md-2"><%= image_tag @user.avatar.url(:tiny), :style=>"width:43px" %></div>
                 <div class="col-md-6"><%= @user.name %> <br/> <%= @user.location %></div>
               </a>
               <div class="col-md-4"><div class="star_<%= @user.id %>" style="float:right"></div></div>

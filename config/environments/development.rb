@@ -34,6 +34,15 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
   # config.action_mailer.default_url_options = { host: 'localhost:3000' }
 
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :s3_credentials => {
+      :bucket => 'gig-mktplace',
+      :access_key_id => 'AKIAJSCEAUMJCULMNN4Q',
+      :secret_access_key => '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'
+    }
+  }
+
   config.after_initialize do
     ActiveMerchant::Billing::Base.mode = :test
     paypal_options = {

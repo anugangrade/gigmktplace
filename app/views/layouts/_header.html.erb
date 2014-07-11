@@ -59,7 +59,7 @@
               <% category = Category.find_by_title(category)%>
               <li><%= link_to category.title, search_by_category_path(category_url: category.category_url) %>
                 <% @subcategory=Category.where("title LIKE ?", "%#{category.title}%") %>
-                  <ul>
+                  <ul class="from_top">
                     <li><b> <%= category.title %> </b></li>
                     <% @subcategory.each do |subcategory| %>  
                       <li><%= link_to subcategory.subtitle, search_by_subcategory_path(category_url: category.category_url, subcategory_url: category.subcategory_url) %></li>

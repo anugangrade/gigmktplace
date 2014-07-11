@@ -62,7 +62,7 @@
       <p>
         <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
         <strong>By:</strong>
-        <b style="font-size: x-large;"><%=link_to @gig.user.name,"/profile/#{@gig.user.id}", :class=>"go_green" %><br/> </b>
+        <b style="font-size: x-large;"><%=link_to @gig.user.name, profile_path(username: @gig.user.username ), :method=>"post", :class=>"go_green" %><br/> </b>
           <span style="font-size: smaller; font-weight: 100;" >
           <% if !@gig.user.location.nil? %>FROM: <%= @gig.user.location %><br/> <% end %>
            JOINED OVER <%= distance_of_time_in_words_to_now(@gig.user.created_at).upcase %> AGO 

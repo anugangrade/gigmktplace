@@ -75,6 +75,16 @@ Rails.application.configure do
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :s3_credentials => {
+      :bucket => 'gig-mktplace',
+      :access_key_id => 'AKIAIRR5FAH2OLUASE3Q',
+      :secret_access_key => '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'
+    }
+  }
+
+
   config.after_initialize do
     ActiveMerchant::Billing::Base.mode = :test
     paypal_options = {

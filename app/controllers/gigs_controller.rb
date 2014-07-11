@@ -11,7 +11,7 @@ class GigsController < ApplicationController
   # GET /gigs/1
   # GET /gigs/1.json
   def show
-    @user_gig_transaction = @gig.transactions.where(user_id: current_user.id)
+    @user_gig_transaction = @gig.transactions.where(user_id: current_user.id) if user_signed_in?
     @slide= @gig.videos + @gig.images
     @avg_rate = @gig.average_rating
     if user_signed_in?
