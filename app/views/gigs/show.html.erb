@@ -7,8 +7,8 @@
       <ol class="breadcrumb">
         <li>
           CREATED <%= distance_of_time_in_words_to_now(@gig.created_at).upcase %> AGO, IN 
-          <%= link_to Category.find(@gig.category_id).title.upcase, root_path(search_by: Category.find(@gig.category_id).title), :class=>"go_green" %> / 
-          <%= link_to Category.find(@gig.category_id).subtitle.upcase, root_path(search_by: Category.find(@gig.category_id).id), :class=>"go_green" %>
+          <%= link_to Category.find(@gig.category_id).title.upcase, search_by_category_path(category_url: @gig.category.category_url), :class=>"go_green" %> / 
+          <%= link_to Category.find(@gig.category_id).subtitle.upcase, search_by_subcategory_path(category_url: @gig.category.category_url, subcategory_url: @gig.category.subcategory_url) , :class=>"go_green" %>
         </li>
         <li> <%= social_share_button_tag(@gig.title, :url => request.original_url) %></li>
         
@@ -28,29 +28,39 @@
       </ul>
 
       <p>
-        <%= form_tag purchase_gig_path, :id=>"purchase_gig_form" do %>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
-               <h2> Check out my Gig Extras</h2>
-            </li>
-            <% @gig.extragigs.each do |extragig| %>
-              <li class="list-group-item">
-                <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s+"_"+extragig.id.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
-                <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
-                <%= extragig.title %>
-              </li>
-            <% end %>
-          </ul>
-          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right order_link", :name=>"5" if @gig.user != current_user %>
-        <% end %>
+        <%= @gig.description %>
       </p>
+
+      <% if !@gig.extragigs.blank? %>
+        <p>
+          <%= form_tag purchase_gig_path, :id=>"purchase_gig_form" do %>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
+                 <h2> Check out my Gig Extras</h2>
+              </li>
+              <% @gig.extragigs.each do |extragig| %>
+                <li class="list-group-item">
+                  <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s+"_"+extragig.id.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
+                  <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
+                  <%= extragig.title %>
+                </li>
+              <% end %>
+            </ul>
+            <%= submit_tag "Order Now($5)", :class=> "btn btn-success right order_link", :name=>"5" if @gig.user != current_user %>
+          <% end %>
+        </p>
+      <% end %>
 
     </div>
 
     <div class="col-md-4">
+      <% if @gig.extragigs.blank? %>
+        <%= form_tag purchase_gig_path, :id=>"purchase_gig_form" do %>
+          <span style="float:left"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
+        <% end %>&nbsp;&nbsp;&nbsp;
+      <% end %>
       <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" if @gig.user != current_user %>
-
       <hr>
       <div id="user_star"></div>
 
@@ -69,10 +79,6 @@
          </span>
       </p>
       <hr>
-      
-      <p>
-        <%= @gig.description %>
-      </p>
 
       <%= link_to "CONTACT ME", conversation_path(@gig.user), :class=>"go_green" %>
       <hr>

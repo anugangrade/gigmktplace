@@ -13,13 +13,11 @@ gem 'open_uri_redirections'
 gem "paperclip", "~> 3.5.3"
 gem 'aws-sdk'
 
-gem "paperclip-ffmpeg"
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # gem 'sass-rails'
 gem 'bootstrap-sass'
 gem 'bxslider-rails'
-gem 'video-js-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
@@ -38,7 +36,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-gem 'spring',        group: :development
+gem 'spring'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -51,7 +49,6 @@ gem 'spring',        group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-gem 'byebug'
 
 gem 'social-share-button'
 gem 'acts-as-taggable-on'

@@ -16,9 +16,8 @@ class GigsController < ApplicationController
     @avg_rate = @gig.average_rating
     if user_signed_in?
       @rating = Rating.where(gig_id: @gig.id, user_id: current_user.id).first 
-      unless @rating
-        @rating = Rating.create(gig_id: @gig.id, user_id: current_user.id, score: 0) 
-      end
+
+      @rating = Rating.create(gig_id: @gig.id, user_id: current_user.id, score: 0)  
     end
   end
 

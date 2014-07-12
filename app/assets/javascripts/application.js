@@ -12,11 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require video-js
 //= require social-share-button
 //= require bxslider
 //= require bootstrap
 //= require masonry/jquery.masonry
-//= require jquery.dropdown
 //= require turbolinks
 //= require_tree .

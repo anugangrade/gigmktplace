@@ -7,13 +7,14 @@ class Conversation < ActiveRecord::Base
 		if !receiver_convs.blank? 
 			receiver_convs.each do |receiver_conv|
 				if receiver_conv.user_id == receiver.id && receiver_conv.sender_id == sender.id
+					@present = "present"
 					return receiver_conv
 				elsif receiver_conv.sender_id == receiver.id && receiver_conv.user_id == sender.id
+					@present = "present"
 					return receiver_conv
-				else
-					return nil
 				end
 			end
+			return nil if @present.nil?
 		else
 			return nil
 		end

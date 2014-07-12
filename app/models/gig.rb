@@ -5,6 +5,7 @@ class Gig < ActiveRecord::Base
 	has_many :ratings, dependent: :destroy
 	has_many :transactions
 	has_many :extragigs
+	belongs_to :category
 
 	validates_presence_of :title, :category_id
 
