@@ -12,11 +12,11 @@
 development:
   adapter: mysql2
   encoding: utf8
-  database: gig_mktplace_development
+  database: gig_mktplace_dev
   pool: 5
   username: root
-  # password: enter123
-  socket: /opt/lampp/var/mysql/mysql.sock
+  password: 1234
+  socket: /var/run/mysqld/mysqld.sock
   # host: 127.0.0.1
 
 

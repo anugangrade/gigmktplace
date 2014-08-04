@@ -1,10 +1,10 @@
-<%= form_for [@gig, @extragig] do |f| %>
-  <% if @extragig.errors.any? %>
+<%= form_for [gig, extragig] do |f| %>
+  <% if extragig.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@extragig.errors.count, "error") %> prohibited this extragig from being saved:</h2>
+      <h2><%= pluralize(extragig.errors.count, "error") %> prohibited this extragig from being saved:</h2>
 
       <ul>
-      <% @extragig.errors.full_messages.each do |message| %>
+      <% extragig.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
       </ul>

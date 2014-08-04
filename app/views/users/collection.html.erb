@@ -1,0 +1,20 @@
+
+<div class="container">
+	<div class="jumbotron row">
+			<b>
+		<div class="col-md-3" style="padding:8px">
+				Recently Added
+			</div>	
+	  <% @collections.each do |collection| %>
+	  	<div class="col-md-3" style="padding:8px">
+				<%= collection.name %>
+			</div>
+		<% end %>
+		</b>
+	</div>
+
+
+	<div class="row">
+	  <%= render 'gigs/index', :gigs => @gigs %>
+	</div>
+</div>

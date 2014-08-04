@@ -12,9 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require social-share-button
-//= require bxslider
 //= require bootstrap
-//= require masonry/jquery.masonry
-//= require turbolinks
+//= require bxslider
 //= require_tree .

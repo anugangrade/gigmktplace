@@ -1,5 +1,5 @@
 class Image < ActiveRecord::Base
 	belongs_to :gig
-	has_attached_file :image, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "missing.png"
+	has_attached_file :image
  	validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
 end

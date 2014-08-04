@@ -2,19 +2,24 @@
   <div class="row">
     <div class="col-md-8">
       <h1>
-        <strong><%= @gig.title %></strong>
+        <strong><%= @gig.title %></strong> 
       </h1>
-      <ol class="breadcrumb">
-        <li>
-          CREATED <%= distance_of_time_in_words_to_now(@gig.created_at).upcase %> AGO, IN 
-          <%= link_to Category.find(@gig.category_id).title.upcase, search_by_category_path(category_url: @gig.category.category_url), :class=>"go_green" %> / 
-          <%= link_to Category.find(@gig.category_id).subtitle.upcase, search_by_subcategory_path(category_url: @gig.category.category_url, subcategory_url: @gig.category.subcategory_url) , :class=>"go_green" %>
-        </li>
-        <li> <%= social_share_button_tag(@gig.title, :url => request.original_url) %></li>
+      <div class="jumbotron">
+        <h6>CREATED 
+          <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
+            <%= @gig.created_at.to_s %>
+          </abbr> , IN 
+          <%= link_to @gig.sub_category.category_title.upcase, search_by_category_path(category_url: @gig.sub_category.category_category_url), :class=>"go_green" %> / 
+          <%= link_to @gig.sub_category_title.upcase, search_by_subcategory_path(category_url: @gig.sub_category.category_category_url, subcategory_url: @gig.sub_category_subcategory_url) , :class=>"go_green" %>
+        </h6>
         
-      </ol>
-
-
+        <%= social_share_button_tag(@gig.title, :url => request.original_url) %>
+        <% if current_user.bookmarks.where(gig_id: @gig.id)[0].nil? %>
+          <%= link_to image_tag('heart_empty.png') , bookmark_gig_path(@gig), :class => 'bookmark_gig', :remote => true %>
+        <% else %>
+          <%= link_to image_tag('heart_filled.png') , bookmark_gig_path(@gig), :class => 'bookmark_gig', :remote => true %>
+        <% end %>
+      </div>
 
       <ul class="bxslider">
        <% @slide.each do |image,index| %>
@@ -33,7 +38,7 @@
 
       <% if !@gig.extragigs.blank? %>
         <p>
-          <%= form_tag purchase_gig_path, :id=>"purchase_gig_form" do %>
+          <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
             <ul class="list-group">
               <li class="list-group-item">
                 <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
@@ -55,13 +60,15 @@
     </div>
 
     <div class="col-md-4">
-      <% if @gig.extragigs.blank? %>
-        <%= form_tag purchase_gig_path, :id=>"purchase_gig_form" do %>
-          <span style="float:left"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
-        <% end %>&nbsp;&nbsp;&nbsp;
+      <% if @gig.user != current_user %>
+        <% if @gig.extragigs.blank? %>
+          <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
+            <span style="float:left"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
+          <% end %>&nbsp;&nbsp;&nbsp;
+        <% end %>
+        <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" %>
+        <hr>
       <% end %>
-      <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" if @gig.user != current_user %>
-      <hr>
       <div id="user_star"></div>
 
       <hr>
@@ -72,10 +79,13 @@
       <p>
         <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
         <strong>By:</strong>
-        <b style="font-size: x-large;"><%=link_to @gig.user.name, profile_path(username: @gig.user.username ), :method=>"post", :class=>"go_green" %><br/> </b>
+        <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :method=>"post", :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
           <span style="font-size: smaller; font-weight: 100;" >
-          <% if !@gig.user.location.nil? %>FROM: <%= @gig.user.location %><br/> <% end %>
-           JOINED OVER <%= distance_of_time_in_words_to_now(@gig.user.created_at).upcase %> AGO 
+          <% if !@gig.user_location.nil? %>FROM: <%= @gig.user_location %><br/> <% end %>
+            JOINED OVER 
+            <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
+              <%= @gig.created_at.to_s %>
+            </abbr>
          </span>
       </p>
       <hr>
@@ -103,6 +113,11 @@
 </div>
 
 <script>
+
+  $(document).ready(function(){
+    $('.bxslider').bxSlider();
+  });
+
   $(function(){
     raty_js()
     <% if @user_gig_transaction.present? && current_user.ratings.where(gig_id: @gig.id, score: 0).present? %>
@@ -127,78 +142,6 @@
     <% end %>
   })
 
-  $(document).ready(function(){
-    $('.bxslider').bxSlider({
-      adaptiveHeight: true,
-      infiniteLoop: false,
-      hideControlOnEnd: true
-    });
-
-    $("#quantity").change(function(){
-      var value = ($(this).val() *5 )
-      $(".order_link").val('Order Now($'+(value)+')')
-      $(".order_link").text('Order Now($'+(value)+')')
-    })
-
-
-    $(".quantity").change(function(){
-      extragig_id = this.id.split("_")[1]
-      
-      $("#checkbox_"+extragig_id).prop('checked', true);
-
-      $.each($('.quantity'), function(index, value){
-        var gig_id = $(value).attr("id")
-        var gig_value = $(value).val()
-        if (gig_id == "quantity") {
-          amount = (gig_value*5)
-        }
-        else{
-          if ($("#checkbox_"+gig_id.split("_")[1]).is(':checked')) {
-            amount += ((gig_value.split("_")[0]) * (gig_value.split("_")[1]) )
-          }
-        }
-      });
-      $(".order_link").val('Order Now($'+(amount)+')')
-      $(".order_link").text('Order Now($'+(amount)+')')
-    })
-
-    $(".extra_checkbox").change(function(){
-      if ($(this).is(':checked')) {
-        $.each($('.quantity'), function(index, value){
-          var gig_id = $(value).attr("id")
-          var gig_value = $(value).val()
-          if (gig_id == "quantity") {
-            amount = (gig_value*5)
-          }
-          else{
-            if ($("#checkbox_"+gig_id.split("_")[1]).is(':checked')) {
-              amount += ((gig_value.split("_")[0]) * (gig_value.split("_")[1]) )
-            }
-          }
-        });
-      }
-      else{
-        $.each($('.quantity'), function(index, value){
-          var gig_id = $(value).attr("id")
-          var gig_value = $(value).val()
-          if (gig_id == "quantity") {
-            amount = (gig_value*5)
-          }
-          else{
-            if ($("#checkbox_"+gig_id.split("_")[1]).is(':checked')) {
-              amount += ((gig_value.split("_")[0]) * (gig_value.split("_")[1]) )
-            }
-          }
-        });
-      }
-      $(".order_link").val('Order Now($'+(amount)+')')
-      $(".order_link").text('Order Now($'+(amount)+')')
-    })
-
-    $(".order_gig").click(function(){
-      $("#purchase_gig_form").submit()
-    })
-  });
 </script>
 
 

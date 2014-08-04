@@ -55,6 +55,12 @@ class UsersController < ApplicationController
     send_file data.read, :type=>data.content_type, :x_sendfile=>true
   end
 
+  def collection
+    @collections = current_user.collections
+    @gigs = []
+    current_user.bookmarks.each {|b| @gigs << b.gig }
+  end
+
 
   private
     def set_user

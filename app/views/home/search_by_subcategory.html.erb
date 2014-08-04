@@ -1,13 +1,13 @@
 <div class="container">
 	<div>
-		<h1> <%= link_to @category.title, search_by_category_path(category_url: @category.category_url), :class=>"go_green"  %>, <%= Category.find_by_subcategory_url(params[:subcategory_url]).subtitle %></h1>
+		<h1> <%= link_to @category.title, search_by_category_path(category_url: @category.category_url), :class=>"go_green"  %>, <%= @subcategory.title %></h1>
 	</div>
 	<br/>
 	<div class="jumbotron row">
 		<b>
 	  <% @subcategories.each do |subcategorie| %>
 	  	<div class="col-md-3" style="padding:8px">
-				<%= link_to subcategorie.subtitle, search_by_subcategory_path(category_url: @category.category_url, subcategory_url: subcategorie.subcategory_url), :class=>"go_green" %>
+				<%= (params[:subcategory_url] == subcategorie.subcategory_url) ?  subcategorie.title : (link_to subcategorie.title, search_by_subcategory_path(category_url: @category.category_url, subcategory_url: subcategorie.subcategory_url), :class=>"go_green") %>
 			</div>
 		<% end %>
 		</b>
@@ -15,7 +15,7 @@
 
 	<div class="container">
 	  <div class="row">
-	    <%= render 'gigs/index' %>
+	    <%= render 'gigs/index', :gigs => @gigs %>
 	  </div>
 	</div>
 </div>

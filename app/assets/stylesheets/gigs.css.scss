@@ -2,3 +2,17 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 @import "bootstrap";
+
+.container .jumbotron {
+	padding-bottom: 40px !important;
+	padding-top: 15px !important;
+}
+	
+
+.social-share-button{
+	float: right;
+}
+
+.container .jumbotron h6{
+	float: left;
+}

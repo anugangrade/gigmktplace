@@ -7,7 +7,7 @@
 		<b>
 	  <% @subcategories.each do |subcategorie| %>
 	  	<div class="col-md-3" style="padding:8px">
-				<%= link_to subcategorie.subtitle, search_by_subcategory_path(category_url: @category.category_url, subcategory_url: subcategorie.subcategory_url), :class=>"go_green" %>
+				<%= link_to subcategorie.title, search_by_subcategory_path(category_url: @category.category_url, subcategory_url: subcategorie.subcategory_url), :class=>"go_green" %>
 			</div>
 		<% end %>
 		</b>
@@ -15,6 +15,6 @@
 
 
 	<div class="row">
-	  <%= render 'gigs/index' %>
+	  <%= render 'gigs/index', :gigs => @gigs %>
 	</div>
 </div>

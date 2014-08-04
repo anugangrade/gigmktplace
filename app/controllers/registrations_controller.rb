@@ -12,7 +12,7 @@ def new
       @number = @users_username.collect(&:username).last.scan( /\d+$/ ).first.to_i
       @username = @username+(@number+1).to_s
     end
-    @user.update_attributes(username: @username)
+    @user.update_attributes(username: @username, active: true)
   end
 
   def edit

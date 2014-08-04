@@ -1,50 +1,41 @@
-<% if !@lists.blank? %>
-  <% count = 0%>
-  <% @lists.each do |list| %>
-    <% gig = list.gig %>
-    <% user = list.gig.user %>
-    <%if count%4==0%>
-      </div><div class="row">
-    <% end %>
+<% gigs.each_with_index do |gig, index| %>
+  <%if (index)%4==0%>
+    </div><div class="row">
+  <% end %>
 
+  <div class="col-md-3 gig_detail" style="padding:25px;"> 
+    <div style="border: 3px solid #E7E7E7;padding:4px;">
 
-    <div class="col-md-3 gig_detail" style="padding:25px;"> 
-      <div style="border: 3px solid #E7E7E7;padding:4px;">
-        
-        <% begin %>
-          <% youtube_id = list.video_url.split("=")[1] %>
-          <div class="videoWrapper">
-            <iframe title="YouTube video player" width="150" height="150" src="http://www.youtube.com/embed/<%= youtube_id %>?controls=2" frameborder="0" allowfullscreen></iframe>
-          </div>
-        <% rescue NoMethodError %>
-          <%= image_tag list.image.url, :style=>"width:100%; height:160px;" %>
-        <% end %>
-        <div class="gig_price"> $5 </div>
-        
-        <h4><%= link_to gig.title ,gig_path(gig), :class=>"go_green"%></h4>
-        <hr>
-        <div class="row">
-          <a href="<%= profile_path(username: user.username) %>" data-method="post">
-            <div class="col-md-2"><%= image_tag user.avatar.url(:tiny), :style=>"width: 40px; height: 35px;" %></div>
-            <div class="col-md-6"><%= user.name %> <br/> <%= user.location %></div>
-          </a>
-          <div class="col-md-4"><div class="star star_<%= user.id %>" style="float:right;"></div></div>
+      <% if !gig.videos.blank? %>
+        <div class="videoWrapper">
+          <iframe title="YouTube video player" width="150" height="150" src="http://www.youtube.com/embed/<%= gig.videos[0].video_url.split("=")[1] %>?controls=2" frameborder="0" allowfullscreen></iframe>
         </div>
+      <% else %>
+        <%= image_tag gig.images[0].image.url, :style=>"width:100%; height:160px;" %>
+      <% end %>
+      <div class="gig_price"> $5 </div>
+      
+
+      <h4><%= link_to gig.title.truncate(29) , show_gig_path(username: gig.user_username, url: gig.url), :method=> "put", :class=>"go_green"%></h4>
+      <hr>
+      <div class="row">
+        <a href="<%= profile_path(username: gig.user_username) %>" data-method="post">
+          <div class="col-md-2"><%= image_tag gig.user_avatar.url(:tiny), :style=>"width: 40px; height: 35px;" %></div>
+          <div class="col-md-6"><%= gig.user_name.capitalize  %> <%= image_tag "online.jpg", :class=>"online_dot" if gig.user_active %><br/> <%= gig.user_location %></div>
+        </a>
+        <div class="col-md-4"><div class="star star_<%= gig.user_id %>" style="float:right;"></div></div>
       </div>
     </div>
-    <% count = count+1%>
-    <script type="text/javascript">
-      $(document).ready(function(){
-        var user_id = "<%= user.id %>"
-        raty_js()
-        $('.star_'+user_id).raty({
-          readOnly: true,
-          score: <%= user.average_rating %>,
-          path: '/assets'
-        });
+  </div>
+  <script>
+    $(document).ready(function(){
+      var user_id = "<%= gig.user.id %>"
+      raty_js()
+      $('.star_'+user_id).raty({
+        readOnly: true,
+        score: <%= gig.user.average_rating %>,
+        path: '/assets'
       });
-    </script> 
-  <% end %>
-<% else %>
-  <h2>Oops!! No GIG found ...</h2>
+    });
+  </script> 
 <% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710175353) do
+ActiveRecord::Schema.define(version: 20140804185213) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -56,13 +56,28 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.datetime "updated_at"
   end
 
+  add_index "attachments", ["message_id"], name: "index_attachments_on_message_id", using: :btree
+
+  create_table "bookmarks", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "gig_id"
+    t.integer  "collection_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "categories", force: true do |t|
     t.string   "title"
-    t.string   "subtitle"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "category_url"
-    t.string   "subcategory_url"
+  end
+
+  create_table "collections", force: true do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "conversations", force: true do |t|
@@ -71,6 +86,8 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "conversations", ["user_id"], name: "index_conversations_on_user_id", using: :btree
 
   create_table "extragigs", force: true do |t|
     t.string   "title"
@@ -81,6 +98,8 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.integer  "gig_id"
   end
 
+  add_index "extragigs", ["gig_id"], name: "index_extragigs_on_gig_id", using: :btree
+
   create_table "gigs", force: true do |t|
     t.text     "title"
     t.integer  "category_id"
@@ -88,10 +107,16 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.text     "description"
     t.text     "instructions_for_buyer"
     t.string   "tags"
-    t.boolean  "express_boolean"
+    t.boolean  "express_boolean",        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "sub_category_id"
+    t.string   "url"
   end
+
+  add_index "gigs", ["category_id"], name: "index_gigs_on_category_id", using: :btree
+  add_index "gigs", ["sub_category_id"], name: "index_gigs_on_sub_category_id", using: :btree
+  add_index "gigs", ["user_id"], name: "index_gigs_on_user_id", using: :btree
 
   create_table "identities", force: true do |t|
     t.integer  "user_id"
@@ -113,6 +138,8 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.datetime "image_updated_at"
   end
 
+  add_index "images", ["gig_id"], name: "index_images_on_gig_id", using: :btree
+
   create_table "messages", force: true do |t|
     t.integer  "conversation_id"
     t.text     "content"
@@ -120,6 +147,9 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "messages", ["conversation_id"], name: "index_messages_on_conversation_id", using: :btree
+  add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
 
   create_table "ratings", force: true do |t|
     t.integer  "gig_id"
@@ -132,6 +162,16 @@ ActiveRecord::Schema.define(version: 20140710175353) do
 
   add_index "ratings", ["gig_id"], name: "index_ratings_on_gig_id", using: :btree
   add_index "ratings", ["user_id"], name: "index_ratings_on_user_id", using: :btree
+
+  create_table "sub_categories", force: true do |t|
+    t.integer  "category_id"
+    t.string   "title"
+    t.string   "subcategory_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sub_categories", ["category_id"], name: "index_sub_categories_on_category_id", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"
@@ -164,13 +204,17 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.datetime "updated_at"
   end
 
+  add_index "transactions", ["extragig_id"], name: "index_transactions_on_extragig_id", using: :btree
+  add_index "transactions", ["gig_id"], name: "index_transactions_on_gig_id", using: :btree
+  add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
+
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -186,6 +230,7 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.datetime "avatar_updated_at"
     t.string   "location"
     t.string   "username"
+    t.boolean  "active",                 default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
@@ -197,5 +242,7 @@ ActiveRecord::Schema.define(version: 20140710175353) do
     t.datetime "updated_at"
     t.string   "video_url"
   end
+
+  add_index "videos", ["gig_id"], name: "index_videos_on_gig_id", using: :btree
 
 end

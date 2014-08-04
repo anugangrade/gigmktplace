@@ -10,12 +10,11 @@
   </thead>
   <tbody>
     <% @conversations.each do |conversation| %>
-      <% receiver = conversation.user_id == current_user.id ? User.find(conversation.sender_id) : User.find(conversation.user_id) %>
-      <% message = conversation.messages.last %>
+      <% receiver = find_receiver(conversation) %>
       <tr data-link="<%= conversation_path(receiver) %>">
         <td><%= image_tag receiver.avatar.url(:thumb), :class=>"inbox_user_image" %><%= receiver.name %></td>
-        <td><%= message.content %></td>
-        <td><%= message.updated_at.strftime('%b %d, %y') %></td>
+        <td><%= conversation.messages.last.content %></td>
+        <td><%= conversation.messages.last.updated_at.strftime('%b %d, %y') %></td>
       </tr>
     <% end %>
   </tbody>

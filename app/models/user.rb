@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
 
   has_many :gigs, dependent: :destroy
   has_many :ratings, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
+  has_many :collections, dependent: :destroy
   has_many :transactions
 
   TEMP_EMAIL_PREFIX = 'change@me'

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-2"><%= image_tag @user.avatar.url, :class=>"profile_image" %></div>
   <div class="col-md-10">
-    <h1><%=@user.name%></h1>
+    <h1><%=@user.name.capitalize %> <%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></h1>
     <div id="star" style="float:left"></div> &nbsp;&nbsp;
     <% if !@user.location.nil? %>FROM : <b><%= @user.location.upcase  %></b>&nbsp;&nbsp; <% end %>
     <%= link_to "CONTACT", conversation_path(@user), :class=>"go_green" if @user != current_user %>
@@ -15,37 +15,9 @@
 <div class="profile_gig_list">
   <% if !@gigs.blank? %>
     <% count = 0%>
-    <b> <%=@user.name%>'s gigs </b>
+    <h3> <%=@user.name.capitalize %>'s gigs </h3>
     <div class="row">
-      <% @gigs.each do |gig| %>
-        <% first_video = gig.videos.first %>
-        <%if count%4==0%>
-          </div><div class="row">
-        <% end %>
-        <div class="col-md-3" style="padding:5px;"> 
-          <div style="border: 3px solid #E7E7E7;padding:4px;">
-
-            <% if first_video.nil? %>
-              <%= link_to image_tag(gig.images.first.image.url, :height=>"130px",:width=>"238px"),gig_path(gig) %>
-            <% else %>
-              <div class="videoWrapper">
-                <% youtube_id = first_video.video_url.split("=")[1] %>
-                <iframe title="YouTube video player" width="225" height="225" src="http://www.youtube.com/embed/<%= youtube_id %>?controls=2" frameborder="0" allowfullscreen></iframe>
-              </div>
-            <% end %>
-            <h4><%= link_to gig.title ,gig_path(gig), :class=>"go_green"%></h4>
-            <hr>
-            <div class="row">
-              <a href="<%= profile_path(username: @user.username) %>" data-method="post">
-                <div class="col-md-2"><%= image_tag @user.avatar.url(:tiny), :style=>"width:43px" %></div>
-                <div class="col-md-6"><%= @user.name %> <br/> <%= @user.location %></div>
-              </a>
-              <div class="col-md-4"><div class="star_<%= @user.id %>" style="float:right"></div></div>
-            </div>
-          </div>
-        </div>
-        <% count = count+1%>
-      <% end %>  
+      <%= render "gigs/index", :gigs => @gigs %>
     </div>
   <% else %>
     <h3>You haven't Created Any Gig yet... Start with creating a <%= link_to "GIG", new_gig_path, :class=>"go_green" %></h3>

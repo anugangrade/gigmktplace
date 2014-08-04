@@ -1,24 +1,18 @@
 class GigsController < ApplicationController
-  before_action :set_gig, only: [:show, :edit, :update, :destroy, :purchase, :confirm_order]
+  include GigsHelper
+  before_action :set_gig, only: [:show, :edit, :update, :destroy, :purchase, :confirm_order, :bookmark]
   before_filter :authenticate_user!  , :except=> [:index, :show, :tag_cloud]
+
   # GET /gigs
   # GET /gigs.json
   def index
-   # @tags = Tag.find(:all, :conditions => ['name LIKE ?', "%#{params[:search]}%"])
     @gigs = Gig.all
   end
 
   # GET /gigs/1
   # GET /gigs/1.json
   def show
-    @user_gig_transaction = @gig.transactions.where(user_id: current_user.id) if user_signed_in?
-    @slide= @gig.videos + @gig.images
-    @avg_rate = @gig.average_rating
-    if user_signed_in?
-      @rating = Rating.where(gig_id: @gig.id, user_id: current_user.id).first 
-
-      @rating = Rating.create(gig_id: @gig.id, user_id: current_user.id, score: 0)  
-    end
+    show_helper
   end
 
   def tag_cloud
@@ -28,10 +22,6 @@ class GigsController < ApplicationController
   # GET /gigs/new
   def new
     @gig = Gig.new
-    respond_to do |format|
-    format.js
-    format.html 
-    end
   end
 
   # GET /gigs/1/edit
@@ -41,27 +31,7 @@ class GigsController < ApplicationController
   # POST /gigs
   # POST /gigs.json
   def create
-    @gig = current_user.gigs.new(gig_params)
-
-    respond_to do |format|
-      if (!params[:images].nil? || !params[:videos].first[1].blank?) && @gig.save
-        if params[:images]
-          params[:images].each { |image|
-            @gig.images.create(image: image)
-          }
-        end
-        if (1..params[:videos].count).each do |video|
-            @gig.videos.create(video_url: params[:videos][video.to_s]) if !params[:videos][video.to_s].blank?
-          end
-        end
-        format.html { redirect_to @gig, notice: 'Gig was successfully created.' }
-        format.json { render :show, status: :created, location: @gig }
-      else
-        @gig.errors["gig"] = "must either have a Image or Video attached" if @gig.errors.full_messages.blank?
-        format.html { render :new }
-        format.json { render json: @gig.errors, status: :unprocessable_entity }
-      end
-    end
+    create_helper
   end
 
   # PATCH/PUT /gigs/1
@@ -83,60 +53,14 @@ class GigsController < ApplicationController
   def destroy
     @gig.destroy
     respond_to do |format|
-      format.html { redirect_to gigs_url, notice: 'Gig was successfully destroyed.' }
+      format.html { redirect_to root_url, notice: 'Gig was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   def purchase
     $total_amount = (params[:quantity].to_i)*5
-
-    extra_array = [{name: "Order Gig", description: "Purchase #{@gig.title}", quantity: params[:quantity], amount: 500}]
-
-    if !params["extragig"].nil?
-      params["extraquantity"].each do |extra|
-        quantity =  extra.split("_")[0].to_i
-        extra_id = extra.split("_")[2]
-        if params["extragig"].include? extra_id
-          extragig = Extragig.find(extra_id)
-          $total_amount += (quantity*(extragig.amount))
-          inner_element = {name: "Gig Extras", description: "Purchase #{extragig.title}", quantity: quantity, amount: (extragig.amount)*100}
-        end
-        extra_array << inner_element
-      end
-    end
-    extra_array = extra_array.compact
-
-    if Rails.env == "development"
-      response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
-        return_url: 'http://localhost:3000'+confirm_order_gig_path ,
-        cancel_return_url: 'http://localhost:3000',
-        currency: "USD",
-        items: extra_array
-      )
-    else
-      response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
-        return_url: 'http://gig-mktplace.herokuapp.com'+confirm_order_gig_path ,
-        cancel_return_url: 'http://gig-mktplace.herokuapp.com',
-        currency: "USD",
-        items: extra_array
-      )
-      
-    end
-    if response.success?
-      current_user.transactions.create(gig_id: @gig.id, quantity:params[:quantity], status: "Pending")
-      if !params["extragig"].nil?
-        params["extraquantity"].each do |extra|
-          extra_id = extra.split("_")[0]
-          quantity =  extra.split("_")[1].to_i
-          if params["extragig"].include? extra_id
-            extragig = Extragig.find(extra_id)
-            current_user.transactions.create(gig_id: extragig.gig.id, extragig_id: extragig.id, quantity:quantity, status: "Pending")
-          end
-        end
-      end
-    end
-
+    purchase_helper
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
   end
 
@@ -159,14 +83,24 @@ class GigsController < ApplicationController
     redirect_to @gig, notice: 'Payment Successfully Done'
   end
 
+  def bookmark
+    @bookmark = current_user.bookmarks.where(gig_id: params["id"])[0]
+    if @bookmark.nil?
+      @bookmark = current_user.bookmarks.create(gig_id: params["id"])
+    else
+      @bookmark.destroy
+      @bookmark = nil
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_gig
-      @gig = Gig.find(params[:id])
+      @gig = params[:id].present? ? Gig.find(params[:id]) : Gig.find_by_url(params[:url])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gig_params
-      params.require(:gig).permit(:tag_list,:title, :image_id, :videos, :description, :instructions_for_buyer, :tags, :express_boolean).merge(category_id: params[:category_id])
+      params.require(:gig).permit(:tag_list,:title, :image_id, :videos, :description, :instructions_for_buyer, :tags, :express_boolean, :category_id, :sub_category_id)
     end
 end

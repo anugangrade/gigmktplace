@@ -1,6 +1,14 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
+
+  Warden::Manager.after_authentication do |user,auth,opts|
+    user.update_attributes(active: true)
+  end
+
+  Warden::Manager.before_logout do |user,auth,opts|
+    user.update_attributes(active: false) if user
+  end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
@@ -233,9 +241,9 @@ Devise.setup do |config|
   # up on your models and hooks.
   
   # production
-  config.omniauth :facebook,'293736107467010','2c1a471791c6f23052c590c1027c9878'
+  # config.omniauth :facebook,'293736107467010','2c1a471791c6f23052c590c1027c9878'
   #development
-  # config.omniauth :facebook, '1374702796089833','2aa34dfb69c3749dcd646a0a4239a072'
+  config.omniauth :facebook, '1374702796089833','2aa34dfb69c3749dcd646a0a4239a072'
   
 
   config.omniauth :twitter, "aEfyyXMY5aOpFauOa1Iz0mjtI", "27TOSMv2BEf23WOfc36RZsXKwLmSBP8H18lYzfoYPx6UKjkBBn"
