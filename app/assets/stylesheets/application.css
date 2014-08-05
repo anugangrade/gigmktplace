@@ -91,6 +91,26 @@
 }
 
 .bookmark_gig > img {
-  width: 16px;
+  width: 17px;
+  /*float: right;*/
+}
+
+.colllect_heart{
+  background-color: #FFFFFF;
+  border: 1px solid #808080;
   float: right;
+  margin-right: 4px;
+  margin-top: -35px;
+  padding: 0 5px 2px 3px;
+  position: relative;
+}
+
+.collection_option{
+  float: right;
+  margin-right: 35px;
+  margin-top: -35px;
+}
+
+.option_icon{
+  padding: 0 4px !important;
 }

@@ -79,7 +79,7 @@
       <p>
         <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
         <strong>By:</strong>
-        <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :method=>"post", :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
+        <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :method=>"put", :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
           <span style="font-size: smaller; font-weight: 100;" >
           <% if !@gig.user_location.nil? %>FROM: <%= @gig.user_location %><br/> <% end %>
             JOINED OVER 

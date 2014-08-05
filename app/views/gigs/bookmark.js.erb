@@ -1,5 +1,5 @@
 <% if !@bookmark.nil? %>
-	$(".bookmark_gig img").attr("src", "/assets/heart_filled.png")
+	$("#collect_gig_<%= @gig.id%> img").attr("src", "/assets/heart_filled.png")
 <% else %>
-	$(".bookmark_gig img").attr("src", "/assets/heart_empty.png")
+	$("#collect_gig_<%= @gig.id%> img").attr("src", "/assets/heart_empty.png")
 <% end %>

@@ -21,7 +21,7 @@ module GigsHelper
         params[:images].each { |image| @gig.images.create(image: image) } if params[:images]
         params[:videos].each { |video| @gig.videos.create(video_url: video) } if !params[:videos][0].blank?
         
-        format.html { redirect_to @gig, notice: 'Gig was successfully created.' }
+        format.html { redirect_to show_gig_path(username: gig.user_username, url: gig.url), :method=> "put", notice: 'Gig was successfully created.' }
         format.json { render :show, status: :created, location: @gig }
       else
         @gig.errors["gig"] = "must either have a Image or Video attached" if @gig.errors.full_messages.blank?

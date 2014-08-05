@@ -24,7 +24,7 @@
             <ul class="dropdown-menu">
               <li><%= link_to "Inbox", conversations_path(username: current_user.username ) %></li>
               <li><%= link_to "Collection", my_collection_path %></li>
-              <li><%= link_to "Profile", profile_path(username: current_user.username ), :method=>"post" %></li>
+              <li><%= link_to "Profile", profile_path(username: current_user.username ), :method=>"put" %></li>
               <li><%= link_to "Sign out", destroy_user_session_path,:method => :delete %></li>
             </ul>
           </li>

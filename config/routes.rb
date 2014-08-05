@@ -22,13 +22,14 @@ Rails.application.routes.draw do
   
   match '/profile/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
   
-  post '/:username' => 'users#profile', :as=>"profile"
+  put '/:username' => 'users#profile', :as=>"profile"
   
   get '/conversation/:id' => 'users#conversation', :as => "conversation"
   get '/conversations' => 'users#conversations', :as => "conversations"
   get '/download_file/:id' => 'users#download_file', :as => "download_file"
   post '/user/message' => "users#message"
   get '/my_collection' => "users#collection"
+  post '/my_collection' => "users#collection"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

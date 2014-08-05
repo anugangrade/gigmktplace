@@ -84,9 +84,10 @@ class GigsController < ApplicationController
   end
 
   def bookmark
-    @bookmark = current_user.bookmarks.where(gig_id: params["id"])[0]
+    @gig_id = params["id"]
+    @bookmark = current_user.bookmarks.where(gig_id: @gig_id)[0]
     if @bookmark.nil?
-      @bookmark = current_user.bookmarks.create(gig_id: params["id"])
+      @bookmark = current_user.bookmarks.create(gig_id: @gig_id)
     else
       @bookmark.destroy
       @bookmark = nil

@@ -59,6 +59,10 @@ class UsersController < ApplicationController
     @collections = current_user.collections
     @gigs = []
     current_user.bookmarks.each {|b| @gigs << b.gig }
+
+    if params[:collection].present?
+      current_user.collections.create(collection_params) if current_user.collections.where(name: collection_params["name"]).blank?
+    end
   end
 
 
@@ -83,5 +87,9 @@ class UsersController < ApplicationController
 
     def attachment_params
       params.require(:attachment).permit(:file => [])
+    end
+
+    def collection_params
+      params.require(:collection).permit(:name)
     end
 end
