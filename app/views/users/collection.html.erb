@@ -3,11 +3,11 @@
 	<div class="jumbotron row">
 			<b>
 		<div class="col-md-3" style="padding:8px">
-				Recently Added
-			</div>	
+			<%= link_to "Recently Added", my_collection_path %>
+		</div>	
 	  <% @collections.each do |collection| %>
 	  	<div class="col-md-3" style="padding:8px">
-				<%= collection.name %>
+				<%= link_to collection.name, my_collection_path(id: collection.id) %>
 			</div>
 		<% end %>
 		</b>

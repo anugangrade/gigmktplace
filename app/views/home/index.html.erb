@@ -1,5 +1,8 @@
 <div class="container">
   <div class="row">
+  	<% if params["search"] %>
+  		<h3> <%= !@gigs.blank? ? "Results matching your search '#{params[:search]}'" : "No Result found for '#{params[:search]}' " %> </h3>
+  	<% end %>
     <%= render 'gigs/index', :gigs => @gigs %>
   </div>
 </div>

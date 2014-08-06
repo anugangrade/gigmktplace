@@ -109,12 +109,14 @@
            </div>
            
      </div><!--full_blog-->
-     <div class="full_gig_blog">
-        <div class="fields">
-          Not Happy ? 
-           <%= link_to "Destroy this GIG", gig, method: :delete, data: {confirm: "Are you sure?"}, :class=> "btn btn-danger" if !gig.id.nil? %>
-        </div>
-     </div><!--full_blog-->
+     <% if !gig.id.nil? %>
+       <div class="full_gig_blog">
+          <div class="fields">
+            Not Happy ? 
+             <%= link_to "Destroy this GIG", gig, method: :delete, data: {confirm: "Are you sure?"}, :class=> "btn btn-danger"  %>
+          </div>
+       </div><!--full_blog-->
+     <% end %>
      
 <% end %> 
 

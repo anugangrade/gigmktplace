@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",:registrations => "registrations" }
 
   get 'home/index'
+  post '/search' => 'home#index', as: "search"
   get '/categories/:category_url' => "home#search_by_category", :as => 'search_by_category'
   get '/categories/:category_url/:subcategory_url' => "home#search_by_subcategory", as: "search_by_subcategory"
   

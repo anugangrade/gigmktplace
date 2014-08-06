@@ -14,11 +14,7 @@
         </h6>
         
         <%= social_share_button_tag(@gig.title, :url => request.original_url) %>
-        <% if current_user.bookmarks.where(gig_id: @gig.id)[0].nil? %>
-          <%= link_to image_tag('heart_empty.png') , bookmark_gig_path(@gig), :class => 'bookmark_gig', :remote => true %>
-        <% else %>
-          <%= link_to image_tag('heart_filled.png') , bookmark_gig_path(@gig), :class => 'bookmark_gig', :remote => true %>
-        <% end %>
+        <%= link_to image_tag(current_user.bookmarks.where(gig_id: @gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png') , bookmark_gig_path(@gig), :class => 'bookmark_gig', :id=>"collect_gig_#{@gig.id}", :remote => true if user_signed_in? %>
       </div>
 
       <ul class="bxslider">

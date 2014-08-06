@@ -22,7 +22,12 @@
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
               <% current_user.collections.each do |collection| %>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><%= collection.name %></a></li>
+                <li role="presentation">
+                  <a data-remote=true tabindex="-1" href="<%= bookmark_gig_path(gig, collection_id: collection.id) %>" class = 'bookmark_gig collection_names' id="collection_gig_<%= collection.id %>" >
+                    <%= image_tag current_user.bookmarks.where(gig_id: gig.id, collection_id: collection.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png'%>
+                    &nbsp;&nbsp;&nbsp;<%= collection.name %>
+                  </a>
+                </li>
               <% end %>
               <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#myModal">+ Add Collection</a></li>
             </ul>
@@ -34,7 +39,7 @@
       <% end %>
       
 
-      <h4><%= link_to gig.title.truncate(29) , show_gig_path(username: gig.user_username, url: gig.url), :method=> "put", :class=>"go_green"%></h4>
+      <h4><%= link_to gig.title.truncate(20) , show_gig_path(username: gig.user_username, url: gig.url), :method=> "put", :class=>"go_green"%></h4>
       <hr>
       <div class="row">
         <a href="<%= profile_path(username: gig.user_username) %>" data-method="put">

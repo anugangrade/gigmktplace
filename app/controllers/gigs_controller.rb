@@ -39,7 +39,7 @@ class GigsController < ApplicationController
   def update
     respond_to do |format|
       if @gig.update(gig_params)
-        format.html { redirect_to @gig, notice: 'Gig was successfully updated.' }
+        format.html { redirect_to show_gig_path(username: @gig.user_username, url: @gig.url), notice: 'Gig was successfully updated.' }
         format.json { render :show, status: :ok, location: @gig }
       else
         format.html { render :edit }
@@ -85,13 +85,20 @@ class GigsController < ApplicationController
 
   def bookmark
     @gig_id = params["id"]
+    @collection_id = params["collection_id"]
     @bookmark = current_user.bookmarks.where(gig_id: @gig_id)[0]
+
     if @bookmark.nil?
       @bookmark = current_user.bookmarks.create(gig_id: @gig_id)
     else
-      @bookmark.destroy
-      @bookmark = nil
+      if @collection_id
+        @bookmark.update_attributes(collection_id: @collection_id)
+      else
+        @bookmark.destroy
+        @bookmark = nil
+      end
     end
+    
   end
 
   private

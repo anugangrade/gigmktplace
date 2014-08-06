@@ -58,7 +58,11 @@ class UsersController < ApplicationController
   def collection
     @collections = current_user.collections
     @gigs = []
-    current_user.bookmarks.each {|b| @gigs << b.gig }
+    if params["id"]
+      current_user.bookmarks.where(collection_id: params["id"]).each {|b| @gigs << b.gig }
+    else
+      current_user.bookmarks.each {|b| @gigs << b.gig }
+    end
 
     if params[:collection].present?
       current_user.collections.create(collection_params) if current_user.collections.where(name: collection_params["name"]).blank?

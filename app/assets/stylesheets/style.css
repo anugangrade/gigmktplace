@@ -35,7 +35,7 @@ ul.dropdown li:hover > ul 			{ visibility: visible;z-index: 1000; }
 
 /*----- create a gig--------------*/
 .cr_gig{
-    width: 50%;float: left;font-size: 22px;
+    text-align: center;
 }
 .gig_lan{float: right;margin-top: 19px;}
 .stages i{ float: left;

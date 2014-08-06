@@ -1,5 +1,13 @@
+
 <% if !@bookmark.nil? %>
-	$("#collect_gig_<%= @gig.id%> img").attr("src", "/assets/heart_filled.png")
+	$("#collect_gig_<%= @gig_id%> img").attr("src", "/assets/heart_filled.png")
 <% else %>
-	$("#collect_gig_<%= @gig.id%> img").attr("src", "/assets/heart_empty.png")
+	$("#collect_gig_<%= @gig_id%> img").attr("src", "/assets/heart_empty.png")
+<% end %>
+
+$(".collection_names img").attr("src", "/assets/heart_empty.png")
+<% if !@collection_id.nil? %>
+	$("#collection_gig_<%= @collection_id%> img").attr("src", "/assets/heart_filled.png")
+<% else %>
+	$("#collection_gig_<%= @collection_id%> img").attr("src", "/assets/heart_empty.png")
 <% end %>
