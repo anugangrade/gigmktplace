@@ -1,6 +1,6 @@
 class GigsController < ApplicationController
   include GigsHelper
-  before_action :set_gig, only: [:show, :edit, :update, :destroy, :purchase, :confirm_order, :bookmark]
+  before_action :set_gig, only: [:show, :edit, :update, :destroy, :purchase, :confirm_order, :bookmark, :rate_it]
   before_filter :authenticate_user!  , :except=> [:index, :show, :tag_cloud]
 
   # GET /gigs
@@ -61,25 +61,22 @@ class GigsController < ApplicationController
   def purchase
     $total_amount = (params[:quantity].to_i)*5
     purchase_helper
-    redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
+    redirect_to EXPRESS_GATEWAY.redirect_url_for(@response.token)
   end
 
   def confirm_order
 
-    @transactions = current_user.transactions.where(@gig.id)
+    transaction = current_user.transactions.where(@gig.id)[0]
     response = EXPRESS_GATEWAY.purchase($total_amount*100, {:token => params[:token],:payer_id => params[:PayerID]})
 
     if response.success?
-      @transactions.each do |transaction|
-        transaction.update_attributes(paypal_token: params[:token], paypal_payer_id: params[:PayerID], status: "Success")
-      end
+      transaction.update_attributes(paypal_token: params[:token], paypal_payer_id: params[:PayerID], status: "Success")
     end
 
     @msg_sender = User.find(@gig.user_id)
 
-    @conv = Conversation.find_conversation(current_user, @msg_sender)
-    @conversation = @conv.nil? ? Conversation.create(user_id: current_user.id,sender_id: @msg_sender.id) : @conv
-    @message = @conversation.messages.create(content: @gig.instructions_for_buyer, user_id: @msg_sender.id)
+    @order_conversation = OrderConversation.create(user_id: current_user.id,sender_id: @msg_sender.id, transaction_id: transaction.id)
+    @message = @order_conversation.order_messages.create(content: @gig.instructions_for_buyer, user_id: @msg_sender.id)
     redirect_to @gig, notice: 'Payment Successfully Done'
   end
 

@@ -9,7 +9,7 @@ $('#user_star').raty({
   path: '/assets',
   click: function(score, evt) {
     $.ajax({
-      url: '/ratings/' + <%= @rating.id %>,
+      url: "<%= rate_it_gig(@gig) %>",
       type: 'PATCH',
       data: { score: score }
     }).done(function (data){});

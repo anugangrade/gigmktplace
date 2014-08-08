@@ -69,6 +69,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def orders
+    @my_orders = current_user.transactions
+  end
+
+  def order_messages
+    @transaction = Transaction.where(order_number: params[:order_number])[0]
+    @gig = Gig.find(@transaction.gig_id)
+    @seller = User.find(@transaction.order_conversation.sender_id)
+    @buyer = User.find(@transaction.order_conversation.user_id)
+    @messages = @transaction.order_conversation.order_messages
+  end
+
 
   private
     def set_user

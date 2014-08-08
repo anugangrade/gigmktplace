@@ -7,13 +7,13 @@ Rails.application.routes.draw do
       post "purchase"
       get "confirm_order"
       get "bookmark"
+      post "rate_it"
     end
     resources :extragigs
   end
 
   put ':username/:url' => 'gigs#show', as: 'show_gig'
 
-  resources :ratings, only: :update
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",:registrations => "registrations" }
 
   get 'home/index'
@@ -31,6 +31,9 @@ Rails.application.routes.draw do
   post '/user/message' => "users#message"
   get '/my_collection' => "users#collection"
   post '/my_collection' => "users#collection"
+  
+  get '/users/:username/orders' => "users#orders", as: "orders"
+  get '/users/:username/orders/:order_number' => "users#order_messages", as: "order_messages"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -1,0 +1,37 @@
+<h1>My Orders</h1>
+
+<table class="table table-hover"> 
+  <thead>
+    <tr>
+      <th>Seller</th>
+      <th>Last Message</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @my_orders.each do |order| %>
+      <% conver = order.order_conversation %>
+      <% seller = User.find(conver.sender_id) %>
+      <tr data-link="<%= order_messages_path(username: current_user.username, order_number: order.order_number) %>">
+        <td><%= image_tag seller.avatar.url(:thumb), :class=>"inbox_user_image" %><%= seller.name %></td>
+        <td><%= conver.order_messages.last.content %></td>
+        <td><%= conver.order_messages.last.updated_at.strftime('%b %d, %y') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<script>
+  jQuery(function($) {
+    $("tr[data-link]").click(function() {
+      window.location = this.dataset.link
+    });
+  })
+</script>
+
+<style>
+tbody tr{
+  cursor: pointer;
+}
+</style>

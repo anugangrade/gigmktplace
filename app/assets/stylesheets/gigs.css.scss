@@ -16,3 +16,41 @@
 .container .jumbotron h6{
 	float: left;
 }
+
+.social-share-button.btn.btn-default {
+    height: 33px;
+    margin-left: 5px;
+}
+
+.bookmark_gig.btn.btn-default {
+    float: right;
+}
+
+.embedly-embed{height: 460px !important;}
+.bx-viewport{ height:470px !important; }
+
+
+.bx-wrapper, .bx-viewport img{
+    height: 458px !important; /*provide height of slider*/
+}
+
+.right{
+  float: right;
+}
+
+ul.tag_list li{
+  background: none repeat scroll 0 0 #ccc;
+  border-radius: 3px;
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  padding: 3px 6px; 
+}
+
+ul.tag_list li a{
+  color: #fff;
+}
+
+ul.tag_list li:hover{
+  background-color: #00B22D;
+  color: #fff;
+}

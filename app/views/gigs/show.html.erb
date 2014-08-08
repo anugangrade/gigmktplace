@@ -14,7 +14,7 @@
         </h6>
         
         <%= social_share_button_tag(@gig.title, :url => request.original_url) %>
-        <%= link_to image_tag(current_user.bookmarks.where(gig_id: @gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png') , bookmark_gig_path(@gig), :class => 'bookmark_gig', :id=>"collect_gig_#{@gig.id}", :remote => true if user_signed_in? %>
+        <%= link_to image_tag(current_user.bookmarks.where(gig_id: @gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png')+"  Collect" , bookmark_gig_path(@gig), :class => 'bookmark_gig btn btn-default', :id=>"collect_gig_#{@gig.id}", :remote => true if user_signed_in? %>
       </div>
 
       <ul class="bxslider">
@@ -112,63 +112,17 @@
 
   $(document).ready(function(){
     $('.bxslider').bxSlider();
+    $(".social-share-button").addClass("btn btn-default")
   });
 
   $(function(){
     raty_js()
-    <% if @user_gig_transaction.present? && current_user.ratings.where(gig_id: @gig.id, score: 0).present? %>
-      $('#user_star').raty({
-        score: <%= @rating.score %>,
-        path: '/assets',
-        click: function(score, evt) {
-          $.ajax({
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            url: '/ratings/' + <%= @rating.id %>,
-            type: 'PATCH',
-            data: { score: score }
-          });
-        }
-      });
-    <% else %>
-      $('#user_star').raty({
-        score: <%= @avg_rate %>,
-        path: '/assets',
-        readOnly: true
-      });
-    <% end %>
+    $('#user_star').raty({
+      score: <%= @avg_rate %>,
+      path: '/assets',
+      readOnly: true
+    });
+    
   })
 
 </script>
-
-
-<style>
-  .embedly-embed{height: 460px !important;}
-  .bx-viewport{ height:470px !important; }
-
-
-  .bx-wrapper, .bx-viewport img{
-    height: 458px !important; /*provide height of slider*/
-}
-
-.right{
-  float: right;
-}
-
-ul.tag_list li{
-  background: none repeat scroll 0 0 #ccc;
-  border-radius: 3px;
-  display: inline-block;
-  margin: 5px 5px 0 0;
-  padding: 3px 6px; 
-}
-
-ul.tag_list li a{
-  color: #fff;
-}
-
-ul.tag_list li:hover{
-  background-color: #00B22D;
-  color: #fff;
-}
-
-</style>

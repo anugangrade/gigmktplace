@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804185213) do
+ActiveRecord::Schema.define(version: 20140808181935) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -151,6 +151,22 @@ ActiveRecord::Schema.define(version: 20140804185213) do
   add_index "messages", ["conversation_id"], name: "index_messages_on_conversation_id", using: :btree
   add_index "messages", ["user_id"], name: "index_messages_on_user_id", using: :btree
 
+  create_table "order_conversations", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "sender_id"
+    t.integer  "transaction_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "order_messages", force: true do |t|
+    t.integer  "order_conversation_id"
+    t.text     "content"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ratings", force: true do |t|
     t.integer  "gig_id"
     t.integer  "user_id"
@@ -195,16 +211,19 @@ ActiveRecord::Schema.define(version: 20140804185213) do
   create_table "transactions", force: true do |t|
     t.integer  "user_id"
     t.integer  "gig_id"
-    t.integer  "extragig_id"
-    t.integer  "quantity"
+    t.string   "extragig_ids",         default: "{}"
+    t.integer  "gig_quantity"
     t.string   "paypal_token"
     t.string   "paypal_payer_id"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "total_amount"
+    t.string   "extragigs_quatity_id", default: "{}"
+    t.string   "order_number"
   end
 
-  add_index "transactions", ["extragig_id"], name: "index_transactions_on_extragig_id", using: :btree
+  add_index "transactions", ["extragig_ids"], name: "index_transactions_on_extragig_ids", using: :btree
   add_index "transactions", ["gig_id"], name: "index_transactions_on_gig_id", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
