@@ -28,12 +28,13 @@ Rails.application.routes.draw do
   get '/conversation/:id' => 'users#conversation', :as => "conversation"
   get '/conversations' => 'users#conversations', :as => "conversations"
   get '/download_file/:id' => 'users#download_file', :as => "download_file"
-  post '/user/message' => "users#message"
+  post '/user/save_message' => "users#save_message"
   get '/my_collection' => "users#collection"
   post '/my_collection' => "users#collection"
   
   get '/users/:username/orders' => "users#orders", as: "orders"
   get '/users/:username/orders/:order_number' => "users#order_messages", as: "order_messages"
+  post '/users/save_order_message' => "users#save_order_message", as: "save_order_message"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

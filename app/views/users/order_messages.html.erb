@@ -25,7 +25,7 @@
       </div>
       <div class="col-md-2"><h1 style="font-size: 75px;">$5</h1></div>
     </div>
-    <table class="table table-hover"> 
+    <table class="table"> 
       <thead>
         <tr>
           <th>Item</th>
@@ -58,14 +58,63 @@
 </div>
 
 <div>
-<% @messages.each do |message| %>
-  <div class="row" style="margin-top:15px;">
+  <% @messages.each_with_index do |message, index| %>
+    <div class="row" style="margin-top:15px;">
       <div class="col-md-1">
         <%= image_tag message.user_avatar.url(:tiny), :style=>"width: 70px;" %>
       </div>
-      <div class="col-md-11">
+      <div class="col-md-8">
         <h4><%= link_to message.user_name, profile_path(username: message.user_username), :class=>"go_green" %></h4>
+        <%= message.content %>
+      </div>
+      <div class="col-md-3">
+        <% if !message.attachments.blank? %>
+          ATTACHMENTS <BR/> 
+          <% message.attachments.each do |attachment| %>
+            <a href="<%= download_file_path(attachment) %>"><%= image_tag "download.png", :style=>"width: 15px;" %>&nbsp;&nbsp;<%= attachment.file_file_name %> </a><br/>
+          <% end %>
+        <% end %>
       </div>
     </div>
-<% end %>
+    <% if index == 1 %>
+      <article class="order-status-lrg">
+        <h4 class="in-progress">
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          Order Started
+        </h4>
+        <p>
+          <%= @seller.name %> will soon start working on your order.<br><br>
+        </p>
+
+      </article>
+    <% end %>
+  <% end %>
+  <b>Reply here : </b>
+  <%= form_for(@order_message, url: save_order_message_path, html: {multipart: true}) do |f| %>
+    <%= f.hidden_field :order_conversation_id, :value=> @transaction.order_conversation.id %>
+    <%= f.text_area :content, :class=> "form-control", :rows=>"3", :placeholder=>"Type your message here..." %>
+    <%= f.hidden_field :user_id, :value=> current_user.id %>
+    <%= hidden_field_tag "transaction_id", @transaction.id %>
+    <%= fields_for :attachment do |a| %>
+      <%= a.file_field :file, multiple: true, :style=>"float:left" %>
+    <% end %>
+    <%= f.submit "Send", :class=>"btn btn-success" %>
+  <% end %>
 </div>
+
+<style>
+  .in-progress span{
+    background: url("/assets/fiverr_icons.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    background-position: -338px 0;
+    height: 23px;
+    margin-left: -24px;
+    width: 48px;
+  }
+  h4.in-progress{
+    font-size: 19px;
+  }
+  .order-status-lrg{
+    text-align: center;
+  }
+
+</style>

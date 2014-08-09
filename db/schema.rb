@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140808181935) do
+ActiveRecord::Schema.define(version: 20140809162741) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20140808181935) do
     t.datetime "file_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "order_message_id"
   end
 
   add_index "attachments", ["message_id"], name: "index_attachments_on_message_id", using: :btree
@@ -221,6 +222,7 @@ ActiveRecord::Schema.define(version: 20140808181935) do
     t.integer  "total_amount"
     t.string   "extragigs_quatity_id", default: "{}"
     t.string   "order_number"
+    t.string   "order_status"
   end
 
   add_index "transactions", ["extragig_ids"], name: "index_transactions_on_extragig_ids", using: :btree

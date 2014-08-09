@@ -1,4 +1,4 @@
-<h2><%= image_tag @user.avatar.url(:thumb) %> Conversation with <%= link_to @user.name.capitalize , profile_path(username: @user.username), :method=>"put" , :class=>"go_green"%> <%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></h2>
+<h2><%= image_tag @user.avatar.url(:thumb), :style=>"width: 100px;" %> Conversation with <%= link_to @user.name.capitalize , profile_path(username: @user.username), :method=>"put" , :class=>"go_green"%> <%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></h2>
 
 <%= link_to "See All Conversations", conversations_path, :class=>"go_green" %>
 <!-- Nav tabs -->
@@ -12,11 +12,12 @@
     <% if !@messages.nil? %>
       <% @messages.each do |message| %>
         <div class="row" style="<% if (message.user == current_user) %> background-color:ghostwhite <% end %>">
-          <div class="col-md-1"><%= image_tag message.user_avatar.url(:thumb), :class=>"conv_image" %></div>
+          <div class="col-md-1"><%= image_tag message.user_avatar.url(:thumb), :class=>"conv_image", :style=>"width: 100%; margin-left: 40%;" %></div>
           <div class="col-md-11">
             <div class"row">
               <div class="col-md-7">
-                <b class="go_green"><%= ( (message.user == current_user) ? "Me" : (link_to message.user_name.capitalize , profile_path(username: message.user_username), :method=>"put", :class=>"go_green") ) %> </b> <%= image_tag "online.jpg", :class=>"online_dot" if gig.user_active %> <br/>
+                <b class="go_green"><%= ( (message.user == current_user) ? "Me" : (link_to message.user_name.capitalize , profile_path(username: message.user_username), :method=>"put", :class=>"go_green") ) %> </b> 
+                <%= image_tag "online.jpg", :class=>"online_dot" if message.user_active %> <br/>
                 <%= message.content %>
               </div>
               <div class="col-md-5" style="border-left:1px solid;">
@@ -33,7 +34,7 @@
       <% end %>
     <% end %>
     <b>Send <span class="go_green"><%= @user.name.capitalize  %></span> a message </b>
-    <%= form_for(@message, url: user_message_path, html: {multipart: true}) do |f| %>
+    <%= form_for(@message, url: user_save_message_path, html: {multipart: true}) do |f| %>
       <%= fields_for :conversation do |c| %>
         <%= c.hidden_field :user_id, :value=> @user.id %>
         <%= c.hidden_field :sender_id, :value=> current_user.id %>

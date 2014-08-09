@@ -32,7 +32,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def message
+  def save_message
     @receiver = User.find(conversation_params[:user_id])
     @sender = User.find(conversation_params[:sender_id])
     
@@ -79,6 +79,20 @@ class UsersController < ApplicationController
     @seller = User.find(@transaction.order_conversation.sender_id)
     @buyer = User.find(@transaction.order_conversation.user_id)
     @messages = @transaction.order_conversation.order_messages
+
+    @order_message = OrderMessage.new
+    attachments = @order_message.attachments.build
+  end
+
+  def save_order_message
+    @order_message = OrderMessage.create(order_message_params)
+    @transaction = Transaction.find(params[:transaction_id])
+    if !params[:attachment].nil?
+      attachment_params["file"].each do |attach|
+        @order_message.attachments.create(:file=> attach)
+      end
+    end
+    redirect_to order_messages_path(username: current_user.username, order_number: @transaction.order_number)
   end
 
 
@@ -107,5 +121,9 @@ class UsersController < ApplicationController
 
     def collection_params
       params.require(:collection).permit(:name)
+    end
+
+    def order_message_params
+      params.require(:order_message).permit(:order_conversation_id, :content, :user_id)
     end
 end
