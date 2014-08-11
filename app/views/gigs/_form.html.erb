@@ -90,11 +90,21 @@
      </div><!--full_blog-->
      
       <div class="full_gig_blog">
-           <div class="labels tp_sp">EXPRESS BOOLEAN</div>
            <div class="fields">
-              <%= f.check_box :express_boolean %>
+              <%= f.check_box :express_boolean %> I'll Deliver this within 24 hrs.
            </div>
      </div><!--full_blog--> 
+
+     <div class="full_gig_blog delivery_block">
+           <div class="labels">Delivery within</div>
+           <div class="fields">
+              <% @array = []
+                9.times{ |i| @array << ["#{i+2} days", i+2 ] }
+              %>
+              <%= f.select :delivery_within, options_for_select(@array) %>
+           </div>
+     </div><!--full_blog-->
+     
        
          <div class="full_gig_blog">
            <div class="labels">INSTRUCTIONS<br /> FOR BYER</div>
@@ -153,5 +163,6 @@ $('#category').change(function(){
     $("#category_dropdown_id").text(category_title+","+subcategory_title)
     return false
   }
+
 
 </script>

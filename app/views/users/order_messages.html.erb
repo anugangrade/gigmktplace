@@ -64,7 +64,7 @@
         <%= image_tag message.user_avatar.url(:tiny), :style=>"width: 70px;" %>
       </div>
       <div class="col-md-8">
-        <h4><%= link_to message.user_name, profile_path(username: message.user_username), :class=>"go_green" %></h4>
+        <h4><%= link_to message.user_name, profile_path(username: message.user_username), :method=>"put", :class=>"go_green" %></h4>
         <%= message.content %>
       </div>
       <div class="col-md-3">
@@ -83,9 +83,19 @@
           Order Started
         </h4>
         <p>
-          <%= @seller.name %> will soon start working on your order.<br><br>
+          <%= @seller.name %> will soon start working on your order.<br>
+          This order is expected to be delivered on <%= (Date.today + (@gig.express_boolean ?  1.day : @gig.delivery_within)).strftime('%b %d, %Y') %>. 
         </p>
 
+      </article>
+      <hr>
+      <article class="order-status-lrg">
+        <header>
+          <h4 class="delivered">
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            YEEHAAA! HERE'S YOUR DELIVERY!</h4>
+        </header>
+        <p>This order will be marked as complete in <%= @gig.express_boolean ? "1 day" : @gig.delivery_within.to_s+" days" %>.</p>
       </article>
     <% end %>
   <% end %>
@@ -103,18 +113,25 @@
 </div>
 
 <style>
-  .in-progress span{
+  .order-status-lrg span{
     background: url("/assets/fiverr_icons.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
-    background-position: -338px 0;
     height: 23px;
     margin-left: -24px;
     width: 48px;
   }
+  h4.in-progress span{
+    background-position: -338px 0;
+  }
   h4.in-progress{
     font-size: 19px;
+    color: #00668C;
   }
   .order-status-lrg{
     text-align: center;
+  }
+
+  h4.delivered span{
+    background-position: -600px 0;
   }
 
 </style>
