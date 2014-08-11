@@ -66,7 +66,7 @@ class GigsController < ApplicationController
 
   def confirm_order
 
-    transaction = current_user.transactions.where(@gig.id)[0]
+    transaction = current_user.transactions.where(gig_id: @gig.id)[0]
     response = EXPRESS_GATEWAY.purchase($total_amount*100, {:token => params[:token],:payer_id => params[:PayerID]})
 
     if response.success?
