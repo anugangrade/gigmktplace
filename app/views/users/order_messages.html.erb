@@ -40,10 +40,10 @@
           <td>$5</td>
         </tr>
         <% @transaction.extragigs_quatity_id.each do |extra| %>
-          <% extra_gig = Extragig.find(extra.keys[0]) %>
+          <% extra_gig = Extragig.find(extra[0]) %>
           <tr>
             <td><span class="go_green">Extra  </span><%= extra_gig.title %></td>
-            <td><%= extra.values[0] %></td>
+            <td><%= extra[1] %></td>
             <td>$<%= extra_gig.amount %></td>
           </tr>
         <% end %>

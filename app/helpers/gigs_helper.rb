@@ -36,17 +36,18 @@ module GigsHelper
     extragigs_quatity_id = []
     if !params["extragig"].nil?
       params["extraquantity"].each do |extra|
-        extra_hash = Hash.new
+        extra_inner_hash = []
         quantity =  extra.split("_")[0].to_i
         extra_id = extra.split("_")[2]
-        extra_hash[extra_id] = quantity
+        extra_inner_hash[0] = extra_id
+        extra_inner_hash[1] = quantity
         if params["extragig"].include? extra_id
           extragig = Extragig.find(extra_id)
           $total_amount += (quantity*(extragig.amount))
           inner_element = {name: "Gig Extras", description: "Purchase #{extragig.title}", quantity: quantity, amount: (extragig.amount)*100}
         end
         extra_array << inner_element
-        extragigs_quatity_id << extra_hash
+        extragigs_quatity_id << extra_inner_hash
       end
     end
     extra_array = extra_array.compact
