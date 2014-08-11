@@ -212,20 +212,19 @@ ActiveRecord::Schema.define(version: 20140809162741) do
   create_table "transactions", force: true do |t|
     t.integer  "user_id"
     t.integer  "gig_id"
-    t.string   "extragig_ids",         default: "{}"
     t.integer  "gig_quantity"
     t.string   "paypal_token"
     t.string   "paypal_payer_id"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "extragig_ids",         default: "--- []\n"
     t.integer  "total_amount"
-    t.string   "extragigs_quatity_id", default: "{}"
+    t.string   "extragigs_quatity_id", default: "--- []\n"
     t.string   "order_number"
     t.string   "order_status"
   end
 
-  add_index "transactions", ["extragig_ids"], name: "index_transactions_on_extragig_ids", using: :btree
   add_index "transactions", ["gig_id"], name: "index_transactions_on_gig_id", using: :btree
   add_index "transactions", ["user_id"], name: "index_transactions_on_user_id", using: :btree
 
