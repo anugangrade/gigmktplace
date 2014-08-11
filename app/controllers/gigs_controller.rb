@@ -67,7 +67,7 @@ class GigsController < ApplicationController
   def confirm_order
 
     transaction = current_user.transactions.where(gig_id: @gig.id)[0]
-    response = EXPRESS_GATEWAY.purchase($total_amount*100, {:token => params[:token],:payer_id => params[:PayerID]})
+    response = EXPRESS_GATEWAY.purchase((transaction.total_amount)*100, {:token => params[:token],:payer_id => params[:PayerID]})
 
     if response.success?
       transaction.update_attributes(paypal_token: params[:token], paypal_payer_id: params[:PayerID], status: "Success")
