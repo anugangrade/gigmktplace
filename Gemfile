@@ -51,7 +51,7 @@ gem 'spring'
 # gem 'capistrano-rails', group: :development
 
 # Use debugger
-gem 'byebug', group: [:development, :test]
+gem 'byebug'
 
 gem 'social-share-button'
 gem 'acts-as-taggable-on'
