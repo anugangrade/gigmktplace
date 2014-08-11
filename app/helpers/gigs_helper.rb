@@ -46,7 +46,6 @@ module GigsHelper
           inner_element = {name: "Gig Extras", description: "Purchase #{extragig.title}", quantity: quantity, amount: (extragig.amount)*100}
         end
         extra_array << inner_element
-        debugger
         extragigs_quatity_id << extra_hash
       end
     end
