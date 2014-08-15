@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140815164406) do
+ActiveRecord::Schema.define(version: 20140815191257) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -181,6 +181,14 @@ ActiveRecord::Schema.define(version: 20140815164406) do
 
   add_index "ratings", ["gig_id"], name: "index_ratings_on_gig_id", using: :btree
   add_index "ratings", ["user_id"], name: "index_ratings_on_user_id", using: :btree
+
+  create_table "replies", force: true do |t|
+    t.integer  "review_id"
+    t.integer  "user_id"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "reviews", force: true do |t|
     t.integer  "gig_id"

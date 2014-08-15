@@ -129,6 +129,11 @@ class UsersController < ApplicationController
     redirect_to order_messages_path(username: current_user.username, order_number: @transaction.order_number), notice: 'Thanks for giving your review.'
   end
 
+  def save_reply
+    @reply = current_user.replies.create(reply_params)
+    redirect_to :back
+  end
+
 
   private
     def set_user
@@ -163,5 +168,9 @@ class UsersController < ApplicationController
 
     def review_params
       params.require(:review).permit(:gig_id, :content, :like_it)
+    end
+
+    def reply_params
+      params.require(:reply).permit(:review_id, :content)
     end
 end

@@ -107,7 +107,7 @@
   </div>
 </div>
 
-<div class="jumbotron">“Great results.. Really happy with it looking forward to working with you in the future”</div>
+<div class="jumbotron"><h3><i>“Great results.. Really happy with it looking forward to working with you in the future”</i></h3></div>
 
 <div class="star_reviews_block">
   <div class="star_block">
@@ -138,7 +138,26 @@
           <%= review.content %>
         </div>
       </div>
-      <hr>
+
+      <div class="row reply_block">
+        <% review.replies.each do |reply|%>
+          <div class="col-md-2"><%= image_tag reply.user.avatar.url(:tiny), :class=>"user_image" %></div>
+          <div class="col-md-10">
+            <h4>Seller's feedback: </h4>
+            <%= reply.content %>
+          </div>
+        <% end %>
+      </div>
+      <% if @gig.user == current_user && @gig.user.replies.blank? %>
+        <%= link_to "Reply", "#", :class=>"reply_review", :id=>"reply_review_#{review.id}" %>
+        <div class="row reply_form" id="reply_form_<%= review.id %>">
+          <%= form_for :reply, :url=> save_reply_path do |f|%>
+            <%= f.text_area :content, required: true, rows: '1' , :class=>"form-control", :placeholder=>"Reply to the buyer" %>
+            <%= f.hidden_field :review_id, :value=> review.id%>
+            <%= f.submit :class=>"btn btn-success right" %>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
 
   </div>
@@ -152,6 +171,12 @@
   $(document).ready(function(){
     $('.bxslider').bxSlider();
     $(".social-share-button").addClass("btn btn-default")
+
+    $(".reply_review").click(function(){
+      var id = this.id.split("_")[2]
+      $("#reply_form_"+id).show();
+      return false;
+    })
   });
 
   $(function(){
