@@ -23,6 +23,9 @@
     <h3>You haven't Created Any Gig yet... Start with creating a <%= link_to "GIG", new_gig_path, :class=>"go_green" %></h3>
   <% end %>
 </div>
+<br/>
+<div id="regions_div" style="border: 1px solid gainsboro; height: 400px; width: 100%; border-radius: 15px; position: relative;"></div>
+
 
 <script type="text/javascript">
   $(document).ready(function(){
@@ -34,6 +37,31 @@
     });
   });
 </script> 
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+  var map_array= getJSonObject('<%= @country_sales %>');
+
+  function getJSonObject(value) {
+      return $.parseJSON(value.replace(/&quot;/ig, '"'));
+  }
+
+  google.load("visualization", "1", {packages:["geochart"]});
+  google.setOnLoadCallback(drawRegionsMap);
+
+  function drawRegionsMap() {
+
+    var data = google.visualization.arrayToDataTable(map_array);
+
+    var options = {};
+
+    var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+    chart.draw(data, options);
+  }
+</script>
+
 
 <style>
 

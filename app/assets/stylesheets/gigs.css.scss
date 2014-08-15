@@ -6,6 +6,8 @@
 .container .jumbotron {
 	padding-bottom: 40px !important;
 	padding-top: 15px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 	
 
@@ -53,4 +55,19 @@ ul.tag_list li a{
 ul.tag_list li:hover{
   background-color: #00B22D;
   color: #fff;
+}
+
+.star_reviews_block{
+  width: 70%;
+}
+
+.star_block{
+  background-color: #F5F5F5;
+  border: 1px solid #DCDCDC;
+}
+
+.user_image{
+  width: 100%; 
+  border: 1px solid gainsboro; 
+  border-radius: 10px;
 }

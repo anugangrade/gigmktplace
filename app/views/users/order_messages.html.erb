@@ -1,6 +1,9 @@
 <ul class="nav nav-tabs" role="tablist">
   <li class="active"><a href="#activity" role="tab" data-toggle="tab">ACTIVITY</a></li>
+  <%= link_to "Mark this order as Complete", order_complete_path(@transaction), :class=>"btn btn-success right" if (current_user == @seller && @transaction.order_status != "complete") %>
+  <%= link_to "ORDER COMPLETED", "#", :class=>"btn btn-success right" if @transaction.order_status == "complete" %>
 </ul>
+
 
 <!-- Tab panes -->
 <div class="tab-content">
@@ -16,7 +19,7 @@
         <% end %>
       </div>
       <div class="col-md-8">
-        <h3><%= @gig.title%></h3><br/>
+        <h3><%= link_to @gig.title, show_gig_path(username: @gig.user_username, url: @gig.url), :method=> "put", :class=>"go_green" %></h3><br/>
         <p>
           Seller: <%= link_to @seller.name, profile_path(username: @seller.username), :method=>"put", :class=>"go_green" %> | 
             Order: #<%= @transaction.order_number %> |
@@ -93,23 +96,96 @@
         <header>
           <h4 class="delivered">
             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            YEEHAAA! HERE'S YOUR DELIVERY!</h4>
+            YEEHAAA! HERE'S YOUR DELIVERY!
+          </h4>
         </header>
         <p>This order will be marked as complete in <%= @gig.express_boolean ? "1 day" : @gig.delivery_within.to_s+" days" %>.</p>
       </article>
     <% end %>
   <% end %>
-  <b>Reply here : </b>
-  <%= form_for(@order_message, url: save_order_message_path, html: {multipart: true}) do |f| %>
-    <%= f.hidden_field :order_conversation_id, :value=> @transaction.order_conversation.id %>
-    <%= f.text_area :content, :class=> "form-control", :rows=>"3", :placeholder=>"Type your message here..." %>
-    <%= f.hidden_field :user_id, :value=> current_user.id %>
-    <%= hidden_field_tag "transaction_id", @transaction.id %>
-    <%= fields_for :attachment do |a| %>
-      <%= a.file_field :file, multiple: true, :style=>"float:left" %>
+  <% if @transaction.order_status != "complete" %>
+    <b>Reply here : </b>
+    <%= form_for(@order_message, url: save_order_message_path, html: {multipart: true}) do |f| %>
+      <%= f.hidden_field :order_conversation_id, :value=> @transaction.order_conversation.id %>
+      <%= f.text_area :content, :class=> "form-control", :rows=>"3", :placeholder=>"Type your message here..." %>
+      <%= f.hidden_field :user_id, :value=> current_user.id %>
+      <%= hidden_field_tag "transaction_id", @transaction.id %>
+      <%= fields_for :attachment do |a| %>
+        <%= a.file_field :file, multiple: true, :style=>"float:left" %>
+      <% end %>
+      <%= f.submit "Send", :class=>"btn btn-success" %>
     <% end %>
-    <%= f.submit "Send", :class=>"btn btn-success" %>
+  <% else %>
+    <% if current_user == @buyer %>
+      <% if current_user.ratings.where(gig_id: @gig.id).count != 3 %>
+        <h4>Please rate your experience</h4>
+      <% end %>
+      <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "communication").blank? %>
+        <div class="row">
+          <div class="col-md-9">
+            <b>Communication With Seller </b><br/>
+            How responsive was the seller during the process? 
+          </div>
+          <div class="col-md-3"><div class="user_star" id="communication"></div></div>
+        </div>
+        <hr>
+      <% end %>
+      <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "service").blank? %>
+        <div class="row">
+          <div class="col-md-9">
+            <b>Service as Described</b><br/>
+            Did the result match the Gig’s description? 
+          </div>
+          <div class="col-md-3"><div class="user_star" id="service"></div></div>
+        </div>
+        <hr>
+      <% end %>
+      <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "recommend").blank? %>
+        <div class="row">
+          <div class="col-md-9">
+            <b>Buy Again Or Recommend</b><br/>
+            Would you recommend buying this Gig? 
+          </div>
+          <div class="col-md-3"><div class="user_star" id="recommend"></div></div>
+        </div>
+      <% end %>
+      <% if current_user.reviews.where(gig_id: @gig.id).blank? %>
+        <a href="#" data-toggle="modal" data-target="#myModal" class="btn btn-success" style="margin-left: 40%;">Write your reviews here</a>
+      <% end %>
+    <% end %>
+
+    <article class="order-status-lrg">
+      <h4 class="delivered">
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        ORDER COMPLETE
+      </h4>
+    </article>
+
   <% end %>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Write ME your reviews</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_for :review, :url=> save_review_path do |f|%>
+          <%= f.text_area :content, required: true, :class=>"form-control", :placeholder=>"Give your views about this GIG" %>
+          <%= f.hidden_field :gig_id, :value=> @gig.id%>
+          <%= hidden_field_tag :transaction_id, @transaction.id%>
+          <%= f.radio_button :like_it, true %>
+          <span><%= image_tag "thumbs_up.png", :id=>"up_empty" %><%= image_tag "thumbs_up_filled.png", :id=>"up_filled", :style=>"display:none;" %></span>
+          <%= f.radio_button :like_it, false %>
+          <span><%= image_tag "thumbs_down.png", :class=>"thumbs_down", :id=>"down_empty" %><%= image_tag "thumbs_down_filled.png" , :class=>"thumbs_down", :id=>"down_filled", :style=>"display:none;"%></span>
+          <%= f.submit :class=>"btn btn-success right" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -134,4 +210,47 @@
     background-position: -600px 0;
   }
 
+  input[name='review[like_it]'] {    
+    margin-left: 2px;
+    margin-top: 6px;
+    opacity: 0;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  .thumbs_down{
+    width: 23px;
+  }
+
 </style>
+
+<script>
+  raty_js()
+  $('.user_star').raty({
+    path: '/assets',
+    click: function(score, evt) {
+      var type = this.id
+      $.ajax({
+        url: "<%= rate_it_gig_path(@gig) %>",
+        type: 'post',
+        data: { score: score, type: type }
+      }).done(function (data){});
+    }
+  });
+
+
+  $("input[name='review[like_it]']").click(function(){
+    if (this.value == 'true'){
+      $("#up_empty").hide()
+      $("#up_filled").show()
+      $("#down_empty").show()
+      $("#down_filled").hide()
+    }
+    else{
+      $("#down_empty").hide()
+      $("#down_filled").show()
+      $("#up_empty").show()
+      $("#up_filled").hide()
+    }
+  });
+</script>

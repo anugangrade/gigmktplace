@@ -5,6 +5,9 @@ module GigsHelper
   	@user_gig_transaction = @gig.transactions.where(user_id: current_user.id) if user_signed_in?
     @slide= @gig.videos + @gig.images
     @avg_rate = @gig.average_rating
+    @comm_avg_rate = @gig.communication_average_rate
+    @service_avg_rate = @gig.service_average_rate
+    @recommend_avg_rate = @gig.recommend_average_rate
     if user_signed_in?
       @rating = Rating.where(gig_id: @gig.id, user_id: current_user.id).first 
     end
@@ -20,7 +23,7 @@ module GigsHelper
         params[:images].each { |image| @gig.images.create(image: image) } if params[:images]
         params[:videos].each { |video| @gig.videos.create(video_url: video) } if !params[:videos][0].blank?
         
-        format.html { redirect_to show_gig_path(username: @gig.user_username, url: @gig.url), :method=> "put", notice: 'Gig was successfully created.' }
+        format.html { redirect_to @gig, notice: 'Gig was successfully created.' }
         format.json { render :show, status: :created, location: @gig }
       else
         @gig.errors["gig"] = "must either have a Image or Video attached" if @gig.errors.full_messages.blank?

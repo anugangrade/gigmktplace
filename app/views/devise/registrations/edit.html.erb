@@ -31,6 +31,13 @@
     </div><!--full_blog-->
 
     <div class="full_gig_blog">
+      <div class="labels">COUNTRY</div>
+      <div class="fields">
+        <%= country_select("user", "country") %>
+      </div>
+    </div><!--full_blog-->
+
+    <div class="full_gig_blog">
       <div class="labels">ABOUT YOU</div>
       <div class="fields">
         <%= f.text_area :description, :class=>"form-control" %>

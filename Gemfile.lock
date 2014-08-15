@@ -15,6 +15,13 @@ GIT
       ransack (~> 1.0)
       sass-rails
 
+GIT
+  remote: git://github.com/stefanpenner/country_select.git
+  revision: 89e0e89febd192896d2cf5d7c0256389ff551db4
+  specs:
+    country_select (2.0.0.rc1)
+      countries (~> 0.9, >= 0.9.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,6 +101,9 @@ GEM
     coffee-script-source (1.7.0)
     colored (1.2)
     columnize (0.8.9)
+    countries (0.9.3)
+      currencies (~> 0.4.2)
+    currencies (0.4.2)
     debugger-linecache (1.2.0)
     devise (3.2.4)
       bcrypt (~> 3.0)
@@ -279,6 +289,7 @@ DEPENDENCIES
   bxslider-rails
   byebug
   coffee-rails (~> 4.0.0)
+  country_select!
   devise
   jbuilder (~> 2.0)
   jquery-rails

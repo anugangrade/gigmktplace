@@ -35,6 +35,8 @@ Rails.application.routes.draw do
   get '/users/:username/orders' => "users#orders", as: "orders"
   get '/users/:username/orders/:order_number' => "users#order_messages", as: "order_messages"
   post '/users/save_order_message' => "users#save_order_message", as: "save_order_message"
+  get 'purchase/order_complete/:id' => "users#order_complete", as: "order_complete"
+  post 'save_review' => "users#save_review", as: "save_review"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

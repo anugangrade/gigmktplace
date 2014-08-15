@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :bookmarks, dependent: :destroy
   has_many :collections, dependent: :destroy
   has_many :transactions
+  has_many :reviews
 
   TEMP_EMAIL_PREFIX = 'change@me'
   TEMP_EMAIL_REGEX = /\Achange@me/

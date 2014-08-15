@@ -15,7 +15,26 @@ class UsersController < ApplicationController
   end
 
   def profile
+    @country_sales = [['Country', 'Sales']]
     @gigs=@user.gigs
+
+    User.where.not(id: @user.id).group_by(&:country).each do |country, users|
+      @count = 0
+      users.each do |user|
+        @gigs.collect(&:id).each {|id| @count += user.transactions.where(gig_id: id, order_status: "complete").count }
+      end
+      @country_sales << [country, @count] if @count != 0
+    end
+
+    @country_sales = @country_sales.to_json
+    
+
+    # @gigs.each do |gig|
+    #   gig.transactions.each_with_index do |transaction|
+    #     country_sale << transaction.user.country
+
+    #   end
+    # end
   end
 
   def conversations
@@ -71,6 +90,9 @@ class UsersController < ApplicationController
 
   def orders
     @my_orders = current_user.transactions
+    current_user.gigs.each do |gig|
+      @my_orders += gig.transactions
+    end
   end
 
   def order_messages
@@ -93,6 +115,18 @@ class UsersController < ApplicationController
       end
     end
     redirect_to order_messages_path(username: current_user.username, order_number: @transaction.order_number)
+  end
+
+  def order_complete
+    @transaction = Transaction.find(params[:id])
+    @transaction.update_attributes(order_status: "complete")
+    redirect_to order_messages_path(username: current_user.username, order_number: @transaction.order_number)
+  end
+
+  def save_review
+    @transaction = Transaction.find(params[:transaction_id])
+    @review = current_user.reviews.create(review_params)
+    redirect_to order_messages_path(username: current_user.username, order_number: @transaction.order_number), notice: 'Thanks for giving your review.'
   end
 
 
@@ -125,5 +159,9 @@ class UsersController < ApplicationController
 
     def order_message_params
       params.require(:order_message).permit(:order_conversation_id, :content, :user_id)
+    end
+
+    def review_params
+      params.require(:review).permit(:gig_id, :content, :like_it)
     end
 end

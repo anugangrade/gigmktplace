@@ -6,6 +6,7 @@
       <th>Seller</th>
       <th>Last Message</th>
       <th>Updated</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -16,6 +17,7 @@
         <td><%= image_tag seller.avatar.url(:thumb), :class=>"inbox_user_image" %><%= seller.name %></td>
         <td><%= conver.order_messages.last.content %></td>
         <td><%= conver.order_messages.last.updated_at.strftime('%b %d, %y') %></td>
+        <td><%= current_user == seller ? "Sell" : "Purchased" %> </td>
       </tr>
     <% end %>
   </tbody>

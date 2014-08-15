@@ -15,6 +15,8 @@ gem 'aws-sdk'
 
 gem 'bxslider-rails'
 
+gem 'country_select', github: 'stefanpenner/country_select'
+
 gem "rails_best_practices"
 
 # Use SCSS for stylesheets

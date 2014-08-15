@@ -1,112 +1,151 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-8">
-      <h1>
-        <strong><%= @gig.title %></strong> 
-      </h1>
-      <div class="jumbotron">
-        <h6>CREATED 
+
+<div class="row">
+  <div class="col-md-8">
+    <h1>
+      <strong><%= @gig.title %></strong> 
+    </h1>
+    <div class="jumbotron">
+      <h6>CREATED 
+        <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
+          <%= @gig.created_at.to_s %>
+        </abbr> , IN 
+        <%= link_to @gig.sub_category.category_title.upcase, search_by_category_path(category_url: @gig.sub_category.category_category_url), :class=>"go_green" %> / 
+        <%= link_to @gig.sub_category_title.upcase, search_by_subcategory_path(category_url: @gig.sub_category.category_category_url, subcategory_url: @gig.sub_category_subcategory_url) , :class=>"go_green" %>
+      </h6>
+      
+      <%= social_share_button_tag(@gig.title, :url => request.original_url) %>
+      <%= link_to image_tag(current_user.bookmarks.where(gig_id: @gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png')+"  Collect" , bookmark_gig_path(@gig), :class => 'bookmark_gig btn btn-default', :id=>"collect_gig_#{@gig.id}", :remote => true if user_signed_in? %>
+    </div>
+
+    <ul class="bxslider">
+     <% @slide.each do |image,index| %>
+        <% if !image.try(:image).nil?%>
+         <%= image_tag (image.image.url),:class=>"img" %>
+        <% else %>
+          <% youtube_id = image.video_url.split("=")[1] %>
+          <iframe title="YouTube video player" width="480" height="460" src="http://www.youtube.com/embed/<%= youtube_id %>?controls=2" frameborder="0" allowfullscreen></iframe>
+        <% end %>
+      <% end %>
+    </ul>
+
+    <p>
+      <%= @gig.description %>
+    </p>
+
+    <% if !@gig.extragigs.blank? %>
+      <p>
+        <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
+          <ul class="list-group">
+            <li class="list-group-item">
+              <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
+               <h2> Check out my Gig Extras</h2>
+            </li>
+            <% @gig.extragigs.each do |extragig| %>
+              <li class="list-group-item">
+                <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s+"_"+extragig.id.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
+                <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
+                <%= extragig.title %>
+              </li>
+            <% end %>
+          </ul>
+          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right order_link", :name=>"5" if @gig.user != current_user %>
+        <% end %>
+      </p>
+    <% end %>
+
+  </div>
+
+  <div class="col-md-4">
+    <% if @gig.user != current_user %>
+      <% if @gig.extragigs.blank? %>
+        <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
+          <span style="float:left"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
+        <% end %>&nbsp;&nbsp;&nbsp;
+      <% end %>
+      <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" %>
+      <hr>
+    <% end %>
+    <div class="user_star overall" ></div>
+
+    <hr>
+    <% if @gig.express_boolean %>
+      <b>Delivered within 24 hours</b>
+    <% end %>
+    <hr>
+    <p>
+      <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
+      <strong>By:</strong>
+      <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :method=>"put", :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
+        <span style="font-size: smaller; font-weight: 100;" >
+        <% if !@gig.user_location.nil? %>FROM: <%= @gig.user_location %><br/> <% end %>
+          JOINED OVER 
           <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
             <%= @gig.created_at.to_s %>
-          </abbr> , IN 
-          <%= link_to @gig.sub_category.category_title.upcase, search_by_category_path(category_url: @gig.sub_category.category_category_url), :class=>"go_green" %> / 
-          <%= link_to @gig.sub_category_title.upcase, search_by_subcategory_path(category_url: @gig.sub_category.category_category_url, subcategory_url: @gig.sub_category_subcategory_url) , :class=>"go_green" %>
-        </h6>
-        
-        <%= social_share_button_tag(@gig.title, :url => request.original_url) %>
-        <%= link_to image_tag(current_user.bookmarks.where(gig_id: @gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png')+"  Collect" , bookmark_gig_path(@gig), :class => 'bookmark_gig btn btn-default', :id=>"collect_gig_#{@gig.id}", :remote => true if user_signed_in? %>
-      </div>
+          </abbr>
+       </span>
+    </p>
+    <hr>
 
-      <ul class="bxslider">
-       <% @slide.each do |image,index| %>
-          <% if !image.try(:image).nil?%>
-           <%= image_tag (image.image.url),:class=>"img" %>
-          <% else %>
-            <% youtube_id = image.video_url.split("=")[1] %>
-            <iframe title="YouTube video player" width="480" height="460" src="http://www.youtube.com/embed/<%= youtube_id %>?controls=2" frameborder="0" allowfullscreen></iframe>
-          <% end %>
+    <%= link_to "CONTACT ME", conversation_path(@gig.user), :class=>"go_green" %>
+    <hr>
+
+    <p>
+      <strong>Related Topics:</strong>
+      <ul class="tag_list">
+        <% @gig.tag_list.each do |tag| %>
+          <li><a href="#"><%= tag %></a></li>
         <% end %>
       </ul>
-
-      <p>
-        <%= @gig.description %>
-      </p>
-
-      <% if !@gig.extragigs.blank? %>
-        <p>
-          <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
-                 <h2> Check out my Gig Extras</h2>
-              </li>
-              <% @gig.extragigs.each do |extragig| %>
-                <li class="list-group-item">
-                  <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s+"_"+extragig.id.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
-                  <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
-                  <%= extragig.title %>
-                </li>
-              <% end %>
-            </ul>
-            <%= submit_tag "Order Now($5)", :class=> "btn btn-success right order_link", :name=>"5" if @gig.user != current_user %>
-          <% end %>
-        </p>
-      <% end %>
-
-    </div>
-
-    <div class="col-md-4">
-      <% if @gig.user != current_user %>
-        <% if @gig.extragigs.blank? %>
-          <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
-            <span style="float:left"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
-          <% end %>&nbsp;&nbsp;&nbsp;
-        <% end %>
-        <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" %>
-        <hr>
-      <% end %>
-      <div id="user_star"></div>
-
-      <hr>
-      <% if @gig.express_boolean %>
-        <b>Delivered within 24 hours</b>
-      <% end %>
-      <hr>
-      <p>
-        <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
-        <strong>By:</strong>
-        <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :method=>"put", :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
-          <span style="font-size: smaller; font-weight: 100;" >
-          <% if !@gig.user_location.nil? %>FROM: <%= @gig.user_location %><br/> <% end %>
-            JOINED OVER 
-            <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
-              <%= @gig.created_at.to_s %>
-            </abbr>
-         </span>
-      </p>
-      <hr>
-
-      <%= link_to "CONTACT ME", conversation_path(@gig.user), :class=>"go_green" %>
-      <hr>
-
-      <p>
-        <strong>Related Topics:</strong>
-        <ul class="tag_list">
-          <% @gig.tag_list.each do |tag| %>
-            <li><a href="#"><%= tag %></a></li>
-          <% end %>
-        </ul>
-      </p>
+    </p>
 
 
-      <% if @gig.user == current_user %>
-        <%= link_to 'Edit', edit_gig_path(@gig), :class=>"btn btn-default" %>
-        <%= link_to "Create Extragig", new_gig_extragig_path(@gig), :class=>"btn btn-default" %>
-      <% end %>
-      
-    </div>
+    <% if @gig.user == current_user %>
+      <%= link_to 'Edit', edit_gig_path(@gig), :class=>"btn btn-default" %>
+      <%= link_to "Create Extragig", new_gig_extragig_path(@gig), :class=>"btn btn-default" %>
+    <% end %>
+    
   </div>
 </div>
+
+<div class="jumbotron">“Great results.. Really happy with it looking forward to working with you in the future”</div>
+
+<div class="star_reviews_block">
+  <div class="star_block">
+    <div class="row">
+      <div class="col-md-3"><b>Buyer Reviews</b> </div>
+      <div class="col-md-2"> <div class="user_star overall"></div> </div>
+      <div class="col-md-4"><%= @gig.reviews.count %> Reviews </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-4">Communication With Seller <br> <div class="user_star" id="communicate"></div> </div>
+      <div class="col-md-4">Service as Described <br> <div class="user_star" id="service"></div> </div>
+      <div class="col-md-4">Buy Again Or Recommend <br> <div class="user_star" id="recommend"></div> </div>
+    </div>
+  </div>
+  <br/>
+  <div>
+    <% @gig.reviews.each do |review| %>
+      <div class="row">
+        <div class="col-md-2"><%= image_tag review.user.avatar.url(:tiny), :class=>"user_image" %></div>
+        <div class="col-md-10">
+          <h4><%= link_to review.user.name, profile_path(username: review.user.username ), :method=>"put", :class=>"go_green"  %></h4>
+          <% if review.like_it %>
+            <%= image_tag "thumbs_up_filled.png" %>
+          <% else %>
+            <%= image_tag "thumbs_down_filled.png" %>
+          <% end %>
+          <%= review.content %>
+        </div>
+      </div>
+      <hr>
+    <% end %>
+
+  </div>
+</div>
+
+
+
 
 <script>
 
@@ -117,11 +156,38 @@
 
   $(function(){
     raty_js()
-    $('#user_star').raty({
-      score: <%= @avg_rate %>,
-      path: '/assets',
-      readOnly: true
+    $( ".user_star" ).each(function() {
+      if (this.id == "communicate"){
+        var avg_rate = <%= @comm_avg_rate %>
+      }
+      else if (this.id == "service"){
+        var avg_rate = <%= @service_avg_rate %>
+      }
+      else if (this.id == "recommend"){
+        var avg_rate = <%= @recommend_avg_rate %>
+      }
+      else{
+        var total_avg_rate = <%= @avg_rate %>
+      }
+
+      if (total_avg_rate){
+        $('.overall').raty({
+          score: total_avg_rate,
+          path: '/assets',
+          readOnly: true
+        });
+      }
+      else{
+        $('#'+this.id).raty({
+          score: avg_rate,
+          path: '/assets',
+          readOnly: true
+        });
+      }
+      
     });
+
+    
     
   })
 

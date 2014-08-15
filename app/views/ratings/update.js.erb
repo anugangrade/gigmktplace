@@ -3,15 +3,3 @@ $('#star').raty({
   score: <%= @gig.average_rating %>,
   path: '/assets'
 });
-
-$('#user_star').raty({
-  score: <%= @rating.score %>,
-  path: '/assets',
-  click: function(score, evt) {
-    $.ajax({
-      url: "<%= rate_it_gig(@gig) %>",
-      type: 'PATCH',
-      data: { score: score }
-    }).done(function (data){});
-  }
-});

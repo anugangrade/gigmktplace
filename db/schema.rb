@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140811193810) do
+ActiveRecord::Schema.define(version: 20140815164406) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 20140811193810) do
     t.datetime "updated_at"
     t.integer  "sub_category_id"
     t.string   "url"
-    t.string   "delivery_within"
+    t.integer  "delivery_within"
   end
 
   add_index "gigs", ["category_id"], name: "index_gigs_on_category_id", using: :btree
@@ -176,10 +176,20 @@ ActiveRecord::Schema.define(version: 20140811193810) do
     t.string   "default"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "rate_type"
   end
 
   add_index "ratings", ["gig_id"], name: "index_ratings_on_gig_id", using: :btree
   add_index "ratings", ["user_id"], name: "index_ratings_on_user_id", using: :btree
+
+  create_table "reviews", force: true do |t|
+    t.integer  "gig_id"
+    t.integer  "user_id"
+    t.text     "content"
+    t.boolean  "like_it"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "sub_categories", force: true do |t|
     t.integer  "category_id"
@@ -252,6 +262,7 @@ ActiveRecord::Schema.define(version: 20140811193810) do
     t.string   "location"
     t.string   "username"
     t.boolean  "active",                 default: false
+    t.string   "country"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

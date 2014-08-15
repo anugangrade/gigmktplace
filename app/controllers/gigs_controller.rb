@@ -98,6 +98,16 @@ class GigsController < ApplicationController
     
   end
 
+  def rate_it
+    @ratings = current_user.ratings.where(gig_id: params[:id], rate_type: params[:type]).first
+    if @ratings.nil?
+      current_user.ratings.create(gig_id: params[:id], score: params[:score], rate_type: params[:type])
+    else
+      @ratings.update_attributes(score: params[:score], rate_type: params[:type])
+    end
+    render json: @ratings
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_gig
