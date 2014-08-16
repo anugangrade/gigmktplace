@@ -63,19 +63,21 @@
         <% end %>&nbsp;&nbsp;&nbsp;
       <% end %>
       <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" %>
-      <hr>
     <% end %>
-    <div class="user_star overall" ></div>
+    <% if @avg_rate != 0 %>
+      <hr>
+      <div class="user_star overall" ></div>
+    <% end %>
 
-    <hr>
     <% if @gig.express_boolean %>
+      <hr>
       <b>Delivered within 24 hours</b>
     <% end %>
     <hr>
     <p>
       <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
       <strong>By:</strong>
-      <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :method=>"put", :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
+      <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
         <span style="font-size: smaller; font-weight: 100;" >
         <% if !@gig.user_location.nil? %>FROM: <%= @gig.user_location %><br/> <% end %>
           JOINED OVER 
@@ -129,7 +131,7 @@
       <div class="row">
         <div class="col-md-2"><%= image_tag review.user.avatar.url(:tiny), :class=>"user_image" %></div>
         <div class="col-md-10">
-          <h4><%= link_to review.user.name, profile_path(username: review.user.username ), :method=>"put", :class=>"go_green"  %></h4>
+          <h4><%= link_to review.user.name, profile_path(username: review.user.username ), :class=>"go_green"  %></h4>
           <% if review.like_it %>
             <%= image_tag "thumbs_up_filled.png" %>
           <% else %>

@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     resources :extragigs
   end
 
-  put ':username/:url' => 'gigs#show', as: 'show_gig'
+  get 'user/:username/:url' => 'gigs#show', as: 'show_gig'
 
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",:registrations => "registrations" }
 
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   
   match '/profile/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
   
-  put '/:username' => 'users#profile', :as=>"profile"
+  get 'user/:username' => 'users#profile', :as=>"profile"
   
   get '/conversation/:id' => 'users#conversation', :as => "conversation"
   get '/conversations' => 'users#conversations', :as => "conversations"
