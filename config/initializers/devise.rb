@@ -241,9 +241,9 @@ Devise.setup do |config|
   # up on your models and hooks.
   
   # production
-  # config.omniauth :facebook,'293736107467010','2c1a471791c6f23052c590c1027c9878'
+  config.omniauth :facebook,'293736107467010','2c1a471791c6f23052c590c1027c9878'
   #development
-  config.omniauth :facebook, '1374702796089833','2aa34dfb69c3749dcd646a0a4239a072'
+  # config.omniauth :facebook, '1374702796089833','2aa34dfb69c3749dcd646a0a4239a072'
   
 
   config.omniauth :twitter, "aEfyyXMY5aOpFauOa1Iz0mjtI", "27TOSMv2BEf23WOfc36RZsXKwLmSBP8H18lYzfoYPx6UKjkBBn"
