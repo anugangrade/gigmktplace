@@ -6,7 +6,7 @@ class ExtragigsController < ApplicationController
   # GET /extragigs
   # GET /extragigs.json
   def index
-    @extragigs = Extragig.all
+    @extragigs = @gig.extragigs
   end
 
   # GET /extragigs/1
@@ -30,7 +30,7 @@ class ExtragigsController < ApplicationController
 
     respond_to do |format|
       if @extragig.save
-        format.html { redirect_to [@gig,@extragig], notice: 'Extragig was successfully created.' }
+        format.html { redirect_to gig_extragigs_path(@gig), notice: 'Extragig was successfully created.' }
         format.json { render :show, status: :created, location: @extragig }
       else
         format.html { render :new }
@@ -44,7 +44,7 @@ class ExtragigsController < ApplicationController
   def update
     respond_to do |format|
       if @extragig.update(extragig_params)
-        format.html { redirect_to [@gig,@extragig], notice: 'Extragig was successfully updated.' }
+        format.html { redirect_to gig_extragigs_path(@gig), notice: 'Extragig was successfully updated.' }
         format.json { render :show, status: :ok, location: @extragig }
       else
         format.html { render :edit }
@@ -58,7 +58,7 @@ class ExtragigsController < ApplicationController
   def destroy
     @extragig.destroy
     respond_to do |format|
-      format.html { redirect_to gig_extragigs_url(@gig), notice: 'Extragig was successfully destroyed.' }
+      format.html { redirect_to gig_extragigs_path(@gig), notice: 'Extragig was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

@@ -123,41 +123,43 @@
     <% end %>
   <% else %>
     <% if current_user == @buyer %>
-      <% if current_user.ratings.where(gig_id: @gig.id).count != 3 %>
-        <h4>Please rate your experience</h4>
-      <% end %>
-      <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "communication").blank? %>
-        <div class="row">
-          <div class="col-md-9">
-            <b>Communication With Seller </b><br/>
-            How responsive was the seller during the process? 
+      <div class="jumbotron">
+        <% if current_user.ratings.where(gig_id: @gig.id).count != 3 %>
+          <h3 style="text-align:center">Please rate your experience</h3>
+        <% end %>
+        <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "communication").blank? %>
+          <div class="row">
+            <div class="col-md-9">
+              <b>Communication With Seller </b><br/>
+              How responsive was the seller during the process? 
+            </div>
+            <div class="col-md-3"><div class="user_star" id="communication"></div></div>
           </div>
-          <div class="col-md-3"><div class="user_star" id="communication"></div></div>
-        </div>
-        <hr>
-      <% end %>
-      <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "service").blank? %>
-        <div class="row">
-          <div class="col-md-9">
-            <b>Service as Described</b><br/>
-            Did the result match the Gig’s description? 
+          <hr>
+        <% end %>
+        <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "service").blank? %>
+          <div class="row">
+            <div class="col-md-9">
+              <b>Service as Described</b><br/>
+              Did the result match the Gig’s description? 
+            </div>
+            <div class="col-md-3"><div class="user_star" id="service"></div></div>
           </div>
-          <div class="col-md-3"><div class="user_star" id="service"></div></div>
-        </div>
-        <hr>
-      <% end %>
-      <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "recommend").blank? %>
-        <div class="row">
-          <div class="col-md-9">
-            <b>Buy Again Or Recommend</b><br/>
-            Would you recommend buying this Gig? 
+          <hr>
+        <% end %>
+        <% if current_user.ratings.where(gig_id: @gig.id, rate_type: "recommend").blank? %>
+          <div class="row">
+            <div class="col-md-9">
+              <b>Buy Again Or Recommend</b><br/>
+              Would you recommend buying this Gig? 
+            </div>
+            <div class="col-md-3"><div class="user_star" id="recommend"></div></div>
           </div>
-          <div class="col-md-3"><div class="user_star" id="recommend"></div></div>
-        </div>
-      <% end %>
-      <% if current_user.reviews.where(gig_id: @gig.id).blank? %>
-        <a href="#" data-toggle="modal" data-target="#myModal" class="btn btn-success" style="margin-left: 40%;">Write your reviews here</a>
-      <% end %>
+        <% end %>
+        <% if current_user.reviews.where(gig_id: @gig.id).blank? %>
+          <a href="#" data-toggle="modal" data-target="#myModal" class="btn btn-success" style="margin-left: 40%;">Write your reviews here</a>
+        <% end %>
+      </div>
     <% end %>
 
     <hr>
