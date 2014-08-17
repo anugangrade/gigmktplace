@@ -131,7 +131,7 @@
       <div class="row">
         <div class="col-md-2"><%= image_tag review.user.avatar.url(:tiny), :class=>"user_image" %></div>
         <div class="col-md-10">
-          <h4><%= link_to review.user.name, profile_path(username: review.user.username ), :class=>"go_green"  %></h4>
+          <h4><%= link_to review.user.name, profile_path(username: review.user.username ), :class=>"go_green"  %><%= image_tag "online.jpg", :class=>"online_dot" if review.user.active %></h4>
           <% if review.like_it %>
             <%= image_tag "thumbs_up_filled.png" %>
           <% else %>

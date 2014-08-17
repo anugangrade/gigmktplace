@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs" role="tablist">
   <li class="active"><a href="#activity" role="tab" data-toggle="tab">ACTIVITY</a></li>
   <%= link_to "Mark this order as Complete", order_complete_path(@transaction), :class=>"btn btn-success right" if (current_user == @seller && @transaction.order_status != "complete") %>
-  <%= link_to "ORDER COMPLETED", "#", :class=>"btn btn-success right" if @transaction.order_status == "complete" %>
+  <%= link_to "#{current_user == @seller ? 'DELIVERY' : 'ORDER'} COMPLETED", "#", :class=>"btn btn-success right" if @transaction.order_status == "complete" %>
 </ul>
 
 
@@ -21,7 +21,7 @@
       <div class="col-md-8">
         <h3><%= link_to @gig.title, show_gig_path(username: @gig.user_username, url: @gig.url), :class=>"go_green" %></h3><br/>
         <p>
-          Seller: <%= link_to @seller.name, profile_path(username: @seller.username), :class=>"go_green" %> | 
+          Seller: <%= link_to @seller.name, profile_path(username: @seller.username), :class=>"go_green" %><%= image_tag "online.jpg", :class=>"online_dot" if @seller.active %> | 
             Order: #<%= @transaction.order_number %> |
             <%= @transaction.updated_at.strftime('%b %d, %Y') %>
         </p>  
@@ -67,7 +67,7 @@
         <%= image_tag message.user_avatar.url(:tiny), :style=>"width: 70px;" %>
       </div>
       <div class="col-md-8">
-        <h4><%= link_to message.user_name, profile_path(username: message.user_username), :class=>"go_green" %></h4>
+        <h4><%= link_to message.user_name, profile_path(username: message.user_username), :class=>"go_green" %><%= image_tag "online.jpg", :class=>"online_dot" if message.user_active %></h4>
         <%= message.content %>
       </div>
       <div class="col-md-3">
@@ -80,6 +80,7 @@
       </div>
     </div>
     <% if index == 1 %>
+      <hr>
       <article class="order-status-lrg">
         <h4 class="in-progress">
           <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -92,6 +93,9 @@
 
       </article>
       <hr>
+    <% end %>
+    <% if !message.mark_order.blank? %>
+      <hr>
       <article class="order-status-lrg">
         <header>
           <h4 class="delivered">
@@ -101,6 +105,7 @@
         </header>
         <p>This order will be marked as complete in <%= @gig.express_boolean ? "1 day" : @gig.delivery_within.to_s+" days" %>.</p>
       </article>
+      <hr>
     <% end %>
   <% end %>
   <% if @transaction.order_status != "complete" %>
@@ -109,6 +114,7 @@
       <%= f.hidden_field :order_conversation_id, :value=> @transaction.order_conversation.id %>
       <%= f.text_area :content, :class=> "form-control", :rows=>"3", :placeholder=>"Type your message here..." %>
       <%= f.hidden_field :user_id, :value=> current_user.id %>
+      <% if current_user == @seller && @transaction.order_status != "in process" %><%= f.check_box :mark_order, {}, "in process", "" %> Start delivery process of this order <% end %>
       <%= hidden_field_tag "transaction_id", @transaction.id %>
       <%= fields_for :attachment do |a| %>
         <%= a.file_field :file, multiple: true, :style=>"float:left" %>
@@ -154,12 +160,14 @@
       <% end %>
     <% end %>
 
+    <hr>
     <article class="order-status-lrg">
       <h4 class="delivered">
         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         ORDER COMPLETE
       </h4>
     </article>
+    <hr>
 
   <% end %>
 </div>

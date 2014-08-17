@@ -33,7 +33,7 @@
         </div><br/>
       <% end %>
     <% end %>
-    <b>Send <span class="go_green"><%= @user.name.capitalize  %></span> a message </b>
+    <b>Send <span class="go_green"><%= @user.name.capitalize  %><%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></span> a message </b>
     <%= form_for(@message, url: user_save_message_path, html: {multipart: true}) do |f| %>
       <%= fields_for :conversation do |c| %>
         <%= c.hidden_field :user_id, :value=> @user.id %>

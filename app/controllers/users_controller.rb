@@ -84,7 +84,8 @@ class UsersController < ApplicationController
     end
 
     if params[:collection].present?
-      current_user.collections.create(collection_params) if current_user.collections.where(name: collection_params["name"]).blank?
+      @new_collection = current_user.collections.create(collection_params) if current_user.collections.where(name: collection_params["name"]).blank?
+      current_user.bookmarks.find_by_gig_id(params["gig_id"]).update_attributes(collection_id: @new_collection.id) if !@new_collection.nil?
     end
   end
 
@@ -109,6 +110,7 @@ class UsersController < ApplicationController
   def save_order_message
     @order_message = OrderMessage.create(order_message_params)
     @transaction = Transaction.find(params[:transaction_id])
+    @transaction.update_attributes(order_status: order_message_params[:mark_order]) if !order_message_params[:mark_order].blank?
     if !params[:attachment].nil?
       attachment_params["file"].each do |attach|
         @order_message.attachments.create(:file=> attach)
@@ -163,7 +165,7 @@ class UsersController < ApplicationController
     end
 
     def order_message_params
-      params.require(:order_message).permit(:order_conversation_id, :content, :user_id)
+      params.require(:order_message).permit(:order_conversation_id, :content, :user_id, :mark_order)
     end
 
     def review_params
