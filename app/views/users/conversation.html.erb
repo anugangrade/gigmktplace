@@ -1,4 +1,4 @@
-<h2><%= image_tag @user.avatar.url(:thumb), :style=>"width: 100px;" %> Conversation with <%= link_to @user.name.capitalize , profile_path(username: @user.username) , :class=>"go_green"%> <%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></h2>
+<h2><%= image_tag @user.avatar.url(:thumb), :style=>"width: 100px;" %> Conversation with <%= link_to @user.name.capitalize , profile_path(username: @user.username) , :method=> "put", :class=>"go_green"%> <%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></h2>
 
 <%= link_to "See All Conversations", conversations_path, :class=>"go_green" %>
 <!-- Nav tabs -->
@@ -16,7 +16,7 @@
           <div class="col-md-11">
             <div class"row">
               <div class="col-md-7">
-                <b class="go_green"><%= ( (message.user == current_user) ? "Me" : (link_to message.user_name.capitalize , profile_path(username: message.user_username), :class=>"go_green") ) %> </b> 
+                <b class="go_green"><%= ( (message.user == current_user) ? "Me" : (link_to message.user_name.capitalize , profile_path(username: message.user_username), :method=> "put", :class=>"go_green") ) %> </b> 
                 <%= image_tag "online.jpg", :class=>"online_dot" if message.user_active %> <br/>
                 <%= message.content %>
               </div>

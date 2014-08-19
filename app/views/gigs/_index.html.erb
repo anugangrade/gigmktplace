@@ -39,10 +39,10 @@
       <% end %>
       
 
-      <h4><%= link_to gig.title.truncate(20) , show_gig_path(username: gig.user_username, url: gig.url), :class=>"go_green"%></h4>
+      <h4><%= link_to gig.title.truncate(20) , show_gig_path(username: gig.user_username, url: gig.url), :method=> "put", :class=>"go_green"%></h4>
       <hr>
       <div class="row">
-        <a href="<%= profile_path(username: gig.user_username) %>" >
+        <a href="<%= profile_path(username: gig.user_username) %>" data-method= "put" >
           <div class="col-md-2"><%= image_tag gig.user_avatar.url(:tiny), :style=>"width: 40px; height: 35px;" %></div>
           <div class="col-md-6"><%= gig.user_name.capitalize  %> <%= image_tag "online.jpg", :class=>"online_dot" if gig.user_active %><br/> <%= gig.user_location %></div>
         </a>

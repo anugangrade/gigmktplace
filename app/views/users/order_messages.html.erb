@@ -19,9 +19,9 @@
         <% end %>
       </div>
       <div class="col-md-8">
-        <h3><%= link_to @gig.title, show_gig_path(username: @gig.user_username, url: @gig.url), :class=>"go_green" %></h3><br/>
+        <h3><%= link_to @gig.title, show_gig_path(username: @gig.user_username, url: @gig.url), :class=>"go_green" , :method=> "put"%></h3><br/>
         <p>
-          Seller: <%= link_to @seller.name, profile_path(username: @seller.username), :class=>"go_green" %><%= image_tag "online.jpg", :class=>"online_dot" if @seller.active %> | 
+          Seller: <%= link_to @seller.name, profile_path(username: @seller.username), :method=> "put", :class=>"go_green" %><%= image_tag "online.jpg", :class=>"online_dot" if @seller.active %> | 
             Order: #<%= @transaction.order_number %> |
             <%= @transaction.updated_at.strftime('%b %d, %Y') %>
         </p>  
@@ -67,7 +67,7 @@
         <%= image_tag message.user_avatar.url(:tiny), :style=>"width: 70px;" %>
       </div>
       <div class="col-md-8">
-        <h4><%= link_to message.user_name, profile_path(username: message.user_username), :class=>"go_green" %><%= image_tag "online.jpg", :class=>"online_dot" if message.user_active %></h4>
+        <h4><%= link_to message.user_name, profile_path(username: message.user_username), :method=> "put", :class=>"go_green" %><%= image_tag "online.jpg", :class=>"online_dot" if message.user_active %></h4>
         <%= message.content %>
       </div>
       <div class="col-md-3">

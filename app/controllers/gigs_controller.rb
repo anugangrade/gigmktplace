@@ -39,7 +39,7 @@ class GigsController < ApplicationController
   def update
     respond_to do |format|
       if @gig.update(gig_params)
-        format.html { redirect_to show_gig_path(username: @gig.user_username, url: @gig.url), notice: 'Gig was successfully updated.' }
+        format.html { redirect_to @gig, notice: 'Gig was successfully updated.' }
         format.json { render :show, status: :ok, location: @gig }
       else
         format.html { render :edit }
@@ -61,17 +61,17 @@ class GigsController < ApplicationController
   def purchase
     $total_amount = (params[:quantity].to_i)*5
     purchase_helper
-    redirect_to EXPRESS_GATEWAY.redirect_url_for(@response.token)
+    # redirect_to EXPRESS_GATEWAY.redirect_url_for(@response.token)
+    redirect_to confirm_order_gig_path(@gig)
   end
 
   def confirm_order
-
     transaction = current_user.transactions.where(gig_id: @gig.id)[0]
-    response = EXPRESS_GATEWAY.purchase((transaction.total_amount)*100, {:token => params[:token],:payer_id => params[:PayerID]})
+    # response = EXPRESS_GATEWAY.purchase((transaction.total_amount)*100, {:token => params[:token],:payer_id => params[:PayerID]})
 
-    if response.success?
+    # if response.success?
       transaction.update_attributes(paypal_token: params[:token], paypal_payer_id: params[:PayerID], status: "Success")
-    end
+    # end
 
     @msg_sender = User.find(@gig.user_id)
 

@@ -55,23 +55,23 @@ module GigsHelper
     end
     extra_array = extra_array.compact
 
-    base_url = (Rails.env == "development") ? 'http://localhost:3000' : 'http://gig-mktplace.herokuapp.com'
+    # base_url = (Rails.env == "development") ? 'http://localhost:3000' : 'http://gig-mktplace.herokuapp.com'
     
 
-    @response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
-      return_url: base_url+confirm_order_gig_path ,
-      cancel_return_url: base_url,
-      currency: "USD",
-      items: extra_array
-    )
+    # @response = EXPRESS_GATEWAY.setup_purchase($total_amount*100,
+    #   return_url: base_url+confirm_order_gig_path ,
+    #   cancel_return_url: base_url,
+    #   currency: "USD",
+    #   items: extra_array
+    # )
     random_string = Array.new(12){[*'0'..'9', *'A'..'Z'].sample}.join
-    if @response.success?
+    # if @response.success?
       @transaction = current_user.transactions.new(gig_id: @gig.id, gig_quantity:params[:quantity], extragig_ids: params["extragig"], total_amount: $total_amount, extragigs_quatity_id: extragigs_quatity_id , status: "Pending", order_number: random_string )
       unless @transaction.save
         @transaction.order_number = Array.new(12){[*'0'..'9', *'A'..'Z'].sample}.join
         @transaction.save
       end
-    end
+    # end
   end
 
 
