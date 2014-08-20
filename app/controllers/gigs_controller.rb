@@ -39,7 +39,7 @@ class GigsController < ApplicationController
   def update
     respond_to do |format|
       if @gig.update(gig_params)
-        format.html { redirect_to @gig, notice: 'Gig was successfully updated.' }
+        format.html { redirect_to show_gig_path(username: @gig.user_username, url: @gig.url), notice: 'Gig was successfully updated.' }
         format.json { render :show, status: :ok, location: @gig }
       else
         format.html { render :edit }

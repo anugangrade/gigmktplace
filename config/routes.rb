@@ -2,6 +2,9 @@ Rails.application.routes.draw do
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
+
+  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",:registrations => "registrations" }
+
   resources :gigs do 
     member do 
       post "purchase"
@@ -12,18 +15,12 @@ Rails.application.routes.draw do
     resources :extragigs
   end
 
-  put '/:username/:url' => 'gigs#show', as: 'show_gig'
-
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks",:registrations => "registrations" }
-
   get 'home/index'
   post '/search' => 'home#index', as: "search"
   get '/categories/:category_url' => "home#search_by_category", :as => 'search_by_category'
   get '/categories/:category_url/:subcategory_url' => "home#search_by_subcategory", as: "search_by_subcategory"
   
   match '/profile/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], :as => :finish_signup
-  
-  put '/:username' => 'users#profile', :as=>"profile"
   
   get '/conversation/:id' => 'users#conversation', :as => "conversation"
   get '/conversations' => 'users#conversations', :as => "conversations"
@@ -94,4 +91,7 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
+
+  get '/:username/:url' => 'gigs#show', as: 'show_gig'
+  get '/:username' => 'users#profile', :as=>"profile"
 end
