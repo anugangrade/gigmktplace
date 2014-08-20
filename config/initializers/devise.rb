@@ -3,11 +3,11 @@
 Devise.setup do |config|
 
   Warden::Manager.after_authentication do |user,auth,opts|
-    user.update_attributes(active: true)
+    user.update_attributes(active: true) if user.class.name == "User"
   end
 
   Warden::Manager.before_logout do |user,auth,opts|
-    user.update_attributes(active: false) if user
+    user.update_attributes(active: false) if (user && user.class.name == "User")
   end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
