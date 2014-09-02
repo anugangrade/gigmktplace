@@ -71,9 +71,6 @@ $(document).ready(function(){
     $(".order_link").text('Order Now($'+(amount)+')')
   })
 
-  $(".order_gig").click(function(){
-    $("#purchase_gig_form").submit()
-  })
-
   $("abbr.timeago").timeago();
+  $('a').tooltip();
 });

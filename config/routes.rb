@@ -36,8 +36,6 @@ Rails.application.routes.draw do
   post 'save_review' => "users#save_review", as: "save_review"
   post 'save_reply' => "users#save_reply", as: "save_reply"
 
-  
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

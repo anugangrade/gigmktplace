@@ -1,20 +1,36 @@
 
 <div class="row">
   <div class="col-md-8">
-    <h1>
-      <strong><%= @gig.title %></strong> 
-    </h1>
-    <div class="jumbotron">
-      <h6>CREATED 
-        <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
-          <%= @gig.created_at.to_s %>
-        </abbr> , IN 
-        <%= link_to @gig.sub_category.category_title.upcase, search_by_category_path(category_url: @gig.sub_category.category_category_url), :class=>"go_green" %> / 
-        <%= link_to @gig.sub_category_title.upcase, search_by_subcategory_path(category_url: @gig.sub_category.category_category_url, subcategory_url: @gig.sub_category_subcategory_url) , :class=>"go_green" %>
-      </h6>
+    <div class="row">
+      <div class="col-md-9"><h1><strong><%= @gig.title %></strong> </h1></div>
+      <div class="col-md-3">
+        <% if @avg_rate != 0 %>
+          <div class="user_star overall top" ></div>
+        <% end %>
+      </div>
+    </div>
+    <div class="jumbotron row">
+      <div class="col-md-8">
+        <h6>CREATED 
+          <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
+            <%= @gig.created_at.to_s %>
+          </abbr> , IN 
+          <%= link_to @gig.sub_category.category_title.upcase, search_by_category_path(category_url: @gig.sub_category.category_category_url), :class=>"go_green" %> / 
+          <%= link_to @gig.sub_category_title.upcase, search_by_subcategory_path(category_url: @gig.sub_category.category_category_url, subcategory_url: @gig.sub_category_subcategory_url) , :class=>"go_green" %>
+        </h6>
+      </div>
+      <div class="col-md-4">
+        <%= social_share_button_tag(@gig.title, :url => request.original_url) %>
+        <% if user_signed_in? %>
+          <%= link_to image_tag(current_user.bookmarks.where(gig_id: @gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png')+"  Collect" , bookmark_gig_path(@gig), :class => 'bookmark_gig btn btn-default', :id=>"collect_gig_#{@gig.id}", :remote => true %>
+        <% else %>
+          <%= link_to image_tag('heart_empty.png')+"  Collect" , new_user_session_path, :data=> {:confirm => "You need to login first!!"}, :class => 'bookmark_gig btn btn-default', :remote => true, :title=>"Collect" %>
+
+
+
+        <% end %>
+      </div>
       
-      <%= social_share_button_tag(@gig.title, :url => request.original_url) %>
-      <%= link_to image_tag(current_user.bookmarks.where(gig_id: @gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png')+"  Collect" , bookmark_gig_path(@gig), :class => 'bookmark_gig btn btn-default', :id=>"collect_gig_#{@gig.id}", :remote => true if user_signed_in? %>
     </div>
 
     <ul class="bxslider">
@@ -31,61 +47,45 @@
     <p>
       <%= @gig.description %>
     </p>
-
-    <% if !@gig.extragigs.blank? %>
-      <p>
-        <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
-          <ul class="list-group">
-            <li class="list-group-item">
-              <span class="right"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
-               <h2> Check out my Gig Extras</h2>
-            </li>
-            <% @gig.extragigs.each do |extragig| %>
-              <li class="list-group-item">
-                <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s+"_"+extragig.id.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
-                <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
-                <%= extragig.title %>
-              </li>
-            <% end %>
-          </ul>
-          <%= submit_tag "Order Now($5)", :class=> "btn btn-success right order_link", :name=>"5" if @gig.user != current_user %>
-        <% end %>
-      </p>
-    <% end %>
-
   </div>
 
   <div class="col-md-4">
-    <% if @gig.user != current_user %>
-      <% if @gig.extragigs.blank? %>
-        <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
-          <span style="float:left"><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control" %></span>
-        <% end %>&nbsp;&nbsp;&nbsp;
+    <div class="row" style="margin-top: 11px;">
+      <div class="col-md-2"><%= image_tag @gig.user.avatar.url, :style=>"width:50px" %></div>
+      <div class="col-md-10">
+        <strong>By:</strong>
+        <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
+          <span style="font-size: smaller; font-weight: 100;" >
+          <% if !@gig.user_location.nil? %>FROM: <%= @gig.user_location %><br/> <% end %>
+            JOINED OVER 
+            <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
+              <%= @gig.created_at.to_s %>
+            </abbr>
+         </span>
+        </div>
+    </div>
+    <p>
+      <%= form_tag purchase_gig_path(@gig), :id=>"purchase_gig_form" do %>
+        <%= submit_tag "Order Now($5)", :class=> "btn btn-lg btn-success order_link", :name=>"5" %>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <span><%= select_tag "quantity", options_for_select(options_for_select(1..20)), :class =>"quantity form-control gig_quantity" %></span>
+          </li>
+          <% @gig.extragigs.each do |extragig| %>
+            <li class="list-group-item">
+              <span class="right"><%= select_tag "extraquantity[]", options_for_select((1..20).map{|n| [n.to_s+" ($"+((extragig.amount)*n).to_s+")", n.to_s+"_"+extragig.amount.to_s+"_"+extragig.id.to_s] }) , :id=>"extraquantity_#{extragig.id}_#{extragig.amount}", :class=>"quantity form-control", :style=>"margin-top:-5px" %></span>
+              <%= check_box_tag 'extragig[]', extragig.id, false, :id=>"checkbox_#{extragig.id}", :class=>"extra_checkbox" %>
+              <%= extragig.title %>
+            </li>
+          <% end %>
+        </ul>
+        
       <% end %>
-      <%= link_to "Order Now($5)", "#", :class=> "btn btn-lg btn-success order_gig order_link", :style=>"color:white" %>
-    <% end %>
-    <% if @avg_rate != 0 %>
-      <hr>
-      <div class="user_star overall" ></div>
+    </p>
+    <% if @gig.express_boolean %>
+      <p class="delivered_text"><%= link_to "Delivered within 24 hours", "#", :class=> "btn btn-success", :style=>"color:white" %></p>
     <% end %>
 
-    <% if @gig.express_boolean %>
-      <hr>
-      <b>Delivered within 24 hours</b>
-    <% end %>
-    <hr>
-    <p>
-      <%= image_tag @gig.user.avatar.url, :style=>"width:50px" %>
-      <strong>By:</strong>
-      <b style="font-size: x-large;"><%=link_to @gig.user_name.capitalize , profile_path(username: @gig.user_username ), :class=>"go_green" %> <%= image_tag "online.jpg", :class=>"online_dot" if @gig.user_active %><br/> </b>
-        <span style="font-size: smaller; font-weight: 100;" >
-        <% if !@gig.user_location.nil? %>FROM: <%= @gig.user_location %><br/> <% end %>
-          JOINED OVER 
-          <abbr class="timeago" title="<%= @gig.created_at.getutc.iso8601 %>">
-            <%= @gig.created_at.to_s %>
-          </abbr>
-       </span>
-    </p>
     <hr>
 
     <%= link_to "CONTACT ME", conversation_path(@gig.user), :class=>"go_green" %>
@@ -108,8 +108,6 @@
     
   </div>
 </div>
-
-<div class="jumbotron"><h3><i>“Great results.. Really happy with it looking forward to working with you in the future”</i></h3></div>
 
 <div class="star_reviews_block">
   <div class="star_block">
@@ -219,3 +217,40 @@
   })
 
 </script>
+
+
+<style>
+.gig_quantity{
+  margin-left: auto;
+  margin-right: auto;
+  width: 23%;
+}
+
+.order_link{
+  font-size: 20px;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 0;
+  width: 100%;
+}
+
+.user_star.overall.top > img {
+    width: 23px;
+}
+
+.user_star.overall.top{
+  margin-top: 20%;
+  width: 100% !important;
+}
+
+.delivered_text{
+   margin: -21px 0 10px;
+}
+
+.delivered_text a{
+  height: 20px;
+  width: 100%;
+  padding: 0;
+  border-radius: 0;
+}
+</style>

@@ -11,10 +11,18 @@
       </button>
       <a class="navbar-brand " href="/" >Gig Market Place</a>
     </div>
-
+    <ul class="nav navbar-nav" style="margin-left: 23%;">
+      <li>
+        <%= form_tag search_path, :method => 'post', :class => "navbar-form navbar-right" do %>
+          <li class="form-group" >
+            <%= text_field_tag :search, params[:search], :class=>"form-control", :placeholder=>"Search", :style=>"height: 30px;" %>
+            <%= submit_tag "Search", :class=>"btn btn-default" %>
+          </li>
+        <% end %>
+      </li>
+    </ul>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "Home", root_path, :class=>"header_links"%></li>
         <% if user_signed_in? %>
@@ -38,52 +46,7 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav dropdown">
-        <li>
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Select Category <span class="caret"></span></a>
-          <ul class="sub_menu dropdown-menu">
-            <% Category.all.each do |category|%>
-              <li><%= link_to category.title, search_by_category_path(category_url: category.category_url) %>
-                <ul class="from_top">
-                  <li><b> <%= category.title %> </b></li>
-                  <% category.sub_categories.each do |subcategory| %>  
-                    <li><%= link_to subcategory.title, search_by_subcategory_path(category_url: category.category_url, subcategory_url: subcategory.subcategory_url) %></li>
-                  <% end %>  
-                </ul>
-              </li>
-            <% end %>
-          </ul>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-          <%= form_tag search_path, :method => 'post', :class => "navbar-form navbar-right" do %>
-            <li class="form-group" >
-              <%= text_field_tag :search, params[:search], :class=>"form-control", :placeholder=>"Search" %>
-              <%= submit_tag "Search", :class=>"btn btn-default" %>
-            </li>
-          <% end %>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-
-<% if params[:controller] == "home" && params[:action] == "index" && !params[:search].present? %>
+<% if !user_signed_in? && params[:controller] == "home" && params[:action] == "index" && !params[:search].present? %>
   <div class="landing_center"><br/>
     <h1 align="center">Welcome to Gig Market Place <br/>
       The world's largest marketplace for services, starting at $5 <br/><br/>
