@@ -19,6 +19,7 @@ gem 'country_select', github: 'stefanpenner/country_select'
 
 gem "rails_best_practices"
 
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # include bootstrap style and javascript
@@ -57,7 +58,7 @@ gem 'byebug'
 
 gem 'social-share-button'
 gem 'acts-as-taggable-on'
-gem 'kaminari'
+gem 'will_paginate', '~> 3.0'
 
 gem 'activemerchant'
 

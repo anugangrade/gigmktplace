@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140817110748) do
+ActiveRecord::Schema.define(version: 20140905175039) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 20140817110748) do
     t.integer  "sub_category_id"
     t.string   "url"
     t.integer  "delivery_within"
+    t.boolean  "featured",               default: false
   end
 
   add_index "gigs", ["category_id"], name: "index_gigs_on_category_id", using: :btree

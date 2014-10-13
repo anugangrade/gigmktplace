@@ -3,6 +3,16 @@
   	<% if params["search"] %>
   		<h3> <%= !@gigs.blank? ? "Results matching your search '#{params[:search]}'" : "No Result found for '#{params[:search]}' " %> </h3>
   	<% end %>
-    <%= render 'gigs/index', :gigs => @gigs %>
+  	<div id="home_gigs">
+    	<%= render(partial: 'gigs/index', collection: @gigs, :as => :gig) %>
+    </div>
+
+	<div id="with-button">
+	    <%= will_paginate @gigs %>
+	</div>
+	<% if @gigs.next_page %>
+	    <div id="load_more_gigs" class="btn btn-primary btn-lg">Show More GIGs</div>
+	<% end %>
+
   </div>
 </div>

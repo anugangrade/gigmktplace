@@ -24,7 +24,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to "Home", root_path, :class=>"header_links"%></li>
+        <li><%#= link_to "Home", root_path, :class=>"header_links"%></li>
         <% if user_signed_in? %>
           <li><%= link_to 'New Gig', new_gig_path, :class=>"header_links" %></li>
            <li class="dropdown">
@@ -38,8 +38,10 @@
             </ul>
           </li>
         <% else %>
-          <li><%= link_to 'Sign In', new_user_session_path, :class=>"header_links" %></li>
-          <li><%= link_to 'Join', new_user_registration_path, :class=>"header_links" %></li>
+          <li><%#= link_to 'Sign In', new_user_session_path, :class=>"header_links" %></li>
+          <li><%#= link_to 'Join', new_user_registration_path, :class=>"header_links" %></li>
+          <li><%= link_to 'Sign In', "#", :class=>"header_links" %></li>
+          <li><%= link_to 'Join', "#", :class=>"header_links" %></li>
         <% end %>
       </ul>
     </div><!-- /.navbar-collapse -->
@@ -48,16 +50,17 @@
 
 <% if !user_signed_in? && params[:controller] == "home" && params[:action] == "index" && !params[:search].present? %>
   <div class="landing_center"><br/>
-    <h1 align="center">Welcome to Gig Market Place <br/>
-      The world's largest marketplace for services, starting at $5 <br/><br/>
-      <%= link_to "Start Now", new_user_registration_path, :class=>"btn btn-success start_now" %>
+    <h1 align="center" style="color:white">Welcome to Servicie <br/>
+      <!-- The world's largest marketplace for services, starting at $5 --> <br/><br/>
+      <%#= link_to "Start Now", new_user_registration_path, :class=>"btn btn-success start_now" %>
+      <%= link_to "Coming Soon", "#", :class=>"btn btn-success start_now" %>
+      
     </h1>
   </div>
 <% end %>
 
-<nav class="navbar navbar-default category_list" role="navigation">
+<!-- <nav class="navbar navbar-default category_list" role="navigation">
   <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
         <span class="sr-only">Toggle navigation</span>
@@ -67,13 +70,13 @@
       </button>
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <% Category.all.each do |category|%>  
-          <li><%= link_to category.title, search_by_category_path(category_url: category.category_url) %></li>
-        <% end %>
+        <%# Category.all.each do |category|%>  
+          <li><%#= link_to category.title, search_by_category_path(category_url: category.category_url) %></li>
+        <%# end %>
       </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    </div>
+  </div>
 </nav>
+ -->

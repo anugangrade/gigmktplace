@@ -1,4 +1,4 @@
-<h2><%= image_tag @user.avatar.url(:thumb), :style=>"width: 100px;" %> Conversation with <%= link_to @user.name.capitalize , profile_path(username: @user.username) , :class=>"go_green"%> <%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></h2>
+<h2><%= image_tag @user.avatar.url(:thumb), :style=>"width: 100px;" %> Conversation with <%= link_to @user.name.capitalize , profile_path(username: @user.username) , :class=>"go_green"%> <%= image_tag "online.jpg", :class=>"online_dot" if (@user.active && @user.online?) %></h2>
 
 <%= link_to "See All Conversations", conversations_path, :class=>"go_green" %>
 <!-- Nav tabs -->
@@ -17,7 +17,7 @@
             <div class"row">
               <div class="col-md-7">
                 <b class="go_green"><%= ( (message.user == current_user) ? "Me" : (link_to message.user_name.capitalize , profile_path(username: message.user_username), :class=>"go_green") ) %> </b> 
-                <%= image_tag "online.jpg", :class=>"online_dot" if message.user_active %> <br/>
+                <%= image_tag "online.jpg", :class=>"online_dot" if (message.user_active && message.user.online?) %> <br/>
                 <%= message.content %>
               </div>
               <div class="col-md-5" style="border-left:1px solid;">
@@ -33,7 +33,7 @@
         </div><br/>
       <% end %>
     <% end %>
-    <b>Send <span class="go_green"><%= @user.name.capitalize  %><%= image_tag "online.jpg", :class=>"online_dot" if @user.active %></span> a message </b>
+    <b>Send <span class="go_green"><%= @user.name.capitalize  %><%= image_tag "online.jpg", :class=>"online_dot" if (@user.active && @user.online?) %></span> a message </b>
     <%= form_for(@message, url: user_save_message_path, html: {multipart: true}) do |f| %>
       <%= fields_for :conversation do |c| %>
         <%= c.hidden_field :user_id, :value=> @user.id %>

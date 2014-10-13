@@ -1,87 +1,82 @@
-<% gigs.each_with_index do |gig, index| %>
-  <%if (index)%4==0%>
-    </div><div class="row">
-  <% end %>
 
-  <div class="col-md-3 gig_detail" style="padding:25px;"> 
-    <div style="border: 3px solid #E7E7E7;padding:4px;">
+<div class="col-md-3 gig_detail" style="padding:25px;"> 
+  <div style="border: 3px solid #E7E7E7;padding:4px;">
 
-      <% if !gig.videos.blank? %>
-        <div class="videoWrapper">
-          <iframe title="YouTube video player" width="150" height="150" src="http://www.youtube.com/embed/<%= gig.videos[0].video_url.split("=")[1] %>?controls=2" frameborder="0" allowfullscreen></iframe>
-        </div>
-      <% else %>
-        <%= image_tag gig.images[0].image.url, :style=>"width:100%; height:160px;" %>
-      <% end %>
-      <div class="gig_price"> $5 </div>
-      <% if user_signed_in? %>
-        <% if params[:action] == "collection" %>
-          <div class="dropdown collection_option">
-            <button class="btn btn-default dropdown-toggle option_icon" type="button" id="dropdownMenu1" data-toggle="dropdown">
-              <span class="glyphicon glyphicon-align-justify"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <% current_user.collections.each do |collection| %>
-                <li role="presentation">
-                  <a data-remote=true tabindex="-1" href="<%= bookmark_gig_path(gig, collection_id: collection.id) %>" class = 'bookmark_gig collection_names' id="collection_gig_<%= collection.id %>" >
-                    <%= image_tag current_user.bookmarks.where(gig_id: gig.id, collection_id: collection.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png'%>
-                    &nbsp;&nbsp;&nbsp;<%= collection.name %>
-                  </a>
-                </li>
-              <% end %>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#collection_<%= gig.id %>">+ Add Collection</a></li>
-            </ul>
-          </div>
-        <% end %>
-        <div class="colllect_heart">
-          <%= link_to image_tag(current_user.bookmarks.where(gig_id: gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png') , bookmark_gig_path(gig), :class => 'bookmark_gig', :id=>"collect_gig_#{gig.id}", :title=>"Collect", :remote => true %>
-        </div>
-      <% else %>
-        <div class="colllect_heart">
-          <%= link_to image_tag('heart_empty.png') , new_user_session_path , :data=> {:confirm => "You need to login first!!"}, :class => 'bookmark_gig', :title=>"Collect" %>
-        </div>
-      <% end %>
-      
-
-      <h4><%= link_to gig.title.truncate(20) , show_gig_path(username: gig.user_username, url: gig.url), :class=>"go_green"%></h4>
-      <hr>
-      <div class="row">
-        <a href="<%= profile_path(username: gig.user_username) %>" >
-          <div class="col-md-2"><%= image_tag gig.user_avatar.url(:tiny), :style=>"width: 40px; height: 35px;" %></div>
-          <div class="col-md-6"><%= gig.user_name.capitalize  %> <%= image_tag "online.jpg", :class=>"online_dot" if gig.user_active %><br/> <%= gig.user_location %></div>
-        </a>
-        <div class="col-md-4"><div class="star star_<%= gig.user_id %>" style="float:right;"></div></div>
+    <% if !gig.videos.blank? %>
+      <div class="videoWrapper">
+        <iframe title="YouTube video player" width="150" height="150" src="http://www.youtube.com/embed/<%= gig.videos[0].video_url.split("=")[1] %>?controls=2" frameborder="0" allowfullscreen></iframe>
       </div>
+    <% else %>
+      <%= image_tag gig.images[0].image.url, :style=>"width:100%; height:160px;" %>
+    <% end %>
+    <div class="gig_price"> $5 </div>
+    <% if user_signed_in? %>
+      <% if params[:action] == "collection" %>
+        <div class="dropdown collection_option">
+          <button class="btn btn-default dropdown-toggle option_icon" type="button" id="dropdownMenu1" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-align-justify"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <% current_user.collections.each do |collection| %>
+              <li role="presentation">
+                <a data-remote=true tabindex="-1" href="<%= bookmark_gig_path(gig, collection_id: collection.id) %>" class = 'bookmark_gig collection_names' id="collection_gig_<%= collection.id %>" >
+                  <%= image_tag current_user.bookmarks.where(gig_id: gig.id, collection_id: collection.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png'%>
+                  &nbsp;&nbsp;&nbsp;<%= collection.name %>
+                </a>
+              </li>
+            <% end %>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#collection_<%= gig.id %>">+ Add Collection</a></li>
+          </ul>
+        </div>
+      <% end %>
+      <div class="colllect_heart">
+        <%= link_to image_tag(current_user.bookmarks.where(gig_id: gig.id)[0].nil? ? 'heart_empty.png' : 'heart_filled.png') , bookmark_gig_path(gig), :class => 'bookmark_gig', :id=>"collect_gig_#{gig.id}", :title=>"Collect", :remote => true %>
+      </div>
+    <% else %>
+      <div class="colllect_heart">
+        <%= link_to image_tag('heart_empty.png') , new_user_session_path , :data=> {:confirm => "You need to login first!!"}, :class => 'bookmark_gig', :title=>"Collect" %>
+      </div>
+    <% end %>
+    
+
+    <h4><%= link_to gig.title.truncate(20) , show_gig_path(username: gig.user_username, url: gig.url), :class=>"go_green"%></h4>
+    <hr>
+    <div class="row">
+      <a href="<%= profile_path(username: gig.user_username) %>" >
+        <div class="col-md-2"><%= image_tag gig.user_avatar.url(:tiny), :style=>"width: 40px; height: 35px;" %></div>
+        <div class="col-md-6"><%= gig.user_name.capitalize  %> <%= image_tag "online.jpg", :class=>"online_dot" if (gig.user_active && gig.user.online?)  %><br/> <%= gig.user_location %></div>
+      </a>
+      <div class="col-md-4"><div class="star star_<%= gig.user_id %>" style="float:right;"></div></div>
     </div>
   </div>
-  <script>
-    $(document).ready(function(){
-      var user_id = "<%= gig.user.id %>"
-      raty_js()
-      $('.star_'+user_id).raty({
-        readOnly: true,
-        score: <%= gig.user.average_rating %>,
-        path: '/assets'
-      });
+</div>
+<script>
+  $(document).ready(function(){
+    var user_id = "<%= gig.user.id %>"
+    raty_js()
+    $('.star_'+user_id).raty({
+      readOnly: true,
+      score: <%= gig.user.average_rating %>,
+      path: '/assets'
     });
-  </script> 
-  <!-- Modal -->
-  <div class="modal fade" id="collection_<%= gig.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <h4 class="modal-title" id="myModalLabel">Create a New Collection</h4>
-        </div>
-        <div class="modal-body">
-          <%= form_for :collection, :url=> my_collection_path do |f|%>
-            <%= f.text_field :name, required: true, :class=>"form-control", :placeholder=>"Name of your collection" , :style=>"float: left; width: 75%; margin-right: 10px;"%>
-            <%= hidden_field_tag "gig_id", gig.id %>
-            <%= f.submit :class=>"btn btn-success" %>
-          <% end %>
-        </div>
+  });
+</script> 
+<!-- Modal -->
+<div class="modal fade" id="collection_<%= gig.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Create a New Collection</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_for :collection, :url=> my_collection_path do |f|%>
+          <%= f.text_field :name, required: true, :class=>"form-control", :placeholder=>"Name of your collection" , :style=>"float: left; width: 75%; margin-right: 10px;"%>
+          <%= hidden_field_tag "gig_id", gig.id %>
+          <%= f.submit :class=>"btn btn-success" %>
+        <% end %>
       </div>
     </div>
   </div>
-<% end %>
+</div>
 

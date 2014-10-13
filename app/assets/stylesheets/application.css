@@ -56,8 +56,9 @@
 }
 
 .landing_center{
-  background-image: url('../assets/bg2.png');
-  height: 265px;
+  background-image: url('../assets/icap-bg.jpg');
+  height: 620px;
+  background-size: 100%
 }
 
 .category_banner{
@@ -112,4 +113,8 @@
 
 .option_icon{
   padding: 0 4px !important;
+}
+
+.tagsinput{
+  width: 100% !important;
 }
